@@ -25,6 +25,8 @@
         .res-txt { font-size: 14px; color: #636e72; font-weight: 600; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .modal-card { background: white; padding: 30px; border-radius: 15px; width: 320px; text-align: center; }
+        /* Блокталған хабарлама стилі */
+        .blocked { color: var(--d); font-size: 20px; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -33,9 +35,15 @@
     <div id="s-start">
         <h2 id="t-title">Informatics Final Exam</h2>
         <p id="t-desc">Questions: 20 | Time: 30 min</p>
-        <select id="lang" onchange="updateUI()"><option value="kz">Қазақ тілі</option><option value="ru">Русский язык</option></select>
-        <input type="text" id="ln" placeholder="Тегі (Фамилия)"><input type="text" id="fn" placeholder="Аты (Имя)">
-        <button class="b-next" id="btn-start" onclick="start()">Тестті бастау</button>
+        <div id="start-form">
+            <select id="lang" onchange="updateUI()"><option value="kz">Қазақ тілі</option><option value="ru">Русский язык</option></select>
+            <input type="text" id="ln" placeholder="Тегі (Фамилия)"><input type="text" id="fn" placeholder="Аты (Имя)">
+            <button class="b-next" id="btn-start" onclick="start()">Тестті бастау</button>
+        </div>
+        <div id="block-msg" class="hidden">
+            <p class="blocked" id="txt-blocked">Сіз бұл тестті тапсырып қойдыңыз!</p>
+            <p style="color: #7f8c8d;" id="txt-blocked-sub">Қайта тапсыруға рұқсат жоқ.</p>
+        </div>
     </div>
 
     <div id="s-test" class="hidden">
@@ -63,7 +71,7 @@
                 <div class="res-item"><span class="res-val" id="r-pen">0</span><span class="res-txt" id="res-lbl-pen">Шегерілді</span></div>
             </div>
         </div>
-        <button class="b-next" onclick="restart()">Қайта тапсыру</button>
+        <p style="color: #95a5a6; font-style: italic;" id="txt-final-info">Нәтиже сақталды. Терезені жабуыңызға болады.</p>
     </div>
 </div>
 
@@ -76,7 +84,7 @@
 </div>
 
 <script>
-// Сұрақтар базасы (Сілтеме ретінде қалдырамыз)
+// Сұрақтар базасы (өзгеріссіз)
 const db = {
     kz: [
         {q:"1011(2) екілік саны ондық жүйеде нешеге тең?", a:["9","11","13","15"], c:1},
@@ -115,7 +123,7 @@ const db = {
         {q:"Основание восьмеричной системы счисления?", a:["2","8","10","16"], c:1},
         {q:"Тег HTML для строки таблицы?", a:["<td>","<th>","<tr>","<table>"], c:2},
         {q:"Если A=True, B=False, чему равно 'A AND B'?", a:["True","False","None","Error"], c:1},
-        {q:"Функция в Python для ввода данных?", a:["print()","input()","read()","get()"], d:1},
+        {q:"Функция в Python для ввода данных?", a:["print()","input()","read()","get()"], c:1},
         {q:"Стандартное расширение файлов HTML?", a:[".txt",".html",".css",".js"], c:1},
         {q:"Чему равно число 10(16) в десятичной системе?", a:["10","16","20","32"], c:1},
         {q:"Как называется оперативная память?", a:["ROM","RAM","HDD","SSD"], c:1},
@@ -125,21 +133,31 @@ const db = {
 };
 
 const ui = {
-    kz: { title: "Informatics Final Exam", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", viol: "Бұзушылықтар", q_lbl: "Сұрақ", m_title: "Тестті аяқтауды растайсыз ба?", m_btn: "ИӘ", m_tip: "(Жабу үшін сыртқа басыңыз)", total: "ЖАЛПЫ БАЛЛ", t_score: "Тест балы", pen: "Шегерілді", v1: "ТЕРЕЗЕДЕН ШЫҚПАҢЫЗ!", v2: "НАЗАР АУДАРЫҢЫЗ!", v3: "БҰЗУШЫЛЫҚ! Балл шегерілді." },
-    ru: { title: "Informatics Final Exam", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", viol: "Нарушения", q_lbl: "Вопрос", m_title: "Завершить тест?", m_btn: "ДА", m_tip: "(Кликните вне окна)", total: "ИТОГОВЫЙ БАЛЛ", t_score: "Балл теста", pen: "Снято баллов", v1: "НЕ ВЫХОДИТЕ!", v2: "ВНИМАНИЕ!", v3: "НАРУШЕНИЕ! Баллы сняты." }
+    kz: { blocked: "Сіз бұл тестті тапсырып қойдыңыз!", sub_blocked: "Қайта тапсыруға рұқсат жоқ.", fin_info: "Нәтиже сақталды. Терезені жабуыңызға болады.", v1: "ТЕРЕЗЕДЕН ШЫҚПАҢЫЗ!", v2: "НАЗАР АУДАРЫҢЫЗ!", v3: "БҰЗУШЫЛЫҚ! Балл шегерілді." },
+    ru: { blocked: "Вы уже прошли этот тест!", sub_blocked: "Повторная сдача запрещена.", fin_info: "Результат сохранен. Можете закрыть окно.", v1: "НЕ ВЫХОДИТЕ ИЗ ОКНА!", v2: "ВНИМАНИЕ!", v3: "НАРУШЕНИЕ! Баллы сняты." }
 };
 
 let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isStarted=false, isFinished=false;
 
-// 1. Деректерді сақтау функциясы
-function saveState() {
-    if(!isStarted || isFinished) return;
+function saveState(done = false) {
+    if(done) {
+        localStorage.setItem('quiz_done', 'true');
+        localStorage.removeItem('quiz_progress'); // Прогрессті өшіру
+        return;
+    }
     const state = { qs, cur, ans, time, viol, L, fn: document.getElementById('fn').value, ln: document.getElementById('ln').value };
     localStorage.setItem('quiz_progress', JSON.stringify(state));
 }
 
-// 2. Деректерді жүктеу функциясы
 function loadState() {
+    // 1. Тест біткенін тексеру
+    if(localStorage.getItem('quiz_done') === 'true') {
+        document.getElementById('start-form').classList.add('hidden');
+        document.getElementById('block-msg').classList.remove('hidden');
+        return;
+    }
+
+    // 2. Жауаптарды жүктеу
     const saved = localStorage.getItem('quiz_progress');
     if(saved) {
         const d = JSON.parse(saved);
@@ -147,45 +165,21 @@ function loadState() {
         document.getElementById('fn').value = d.fn; 
         document.getElementById('ln').value = d.ln;
         document.getElementById('lang').value = L;
-        updateUI();
-        start(true); // Тестті бірден бастау
-    } else {
-        updateUI();
+        start(true);
     }
-}
-
-function updateUI() {
-    L = document.getElementById('lang').value;
-    const t = ui[L];
-    for(let id in t) { 
-        let el = document.getElementById(id) || document.getElementById(`res-lbl-${id}`) || document.getElementById(`btn-${id}`);
-        if(el) el.innerText = t[id];
-    }
-    // Қолмен аудару керек жерлер
-    document.getElementById('t-title').innerText = t.title;
-    document.getElementById('t-desc').innerText = t.desc;
-    document.getElementById('btn-start').innerText = t.start;
-    document.getElementById('m-title').innerText = t.m_title;
-    document.getElementById('m-btn').innerText = t.m_btn;
-    document.getElementById('m-tip').innerText = t.m_tip;
 }
 
 function start(isResume = false) {
     if(!isResume) {
         let f=document.getElementById('fn').value.trim(), l=document.getElementById('ln').value.trim();
-        if(!f || !l) return alert(L==='kz'?"Аты-жөніңізді жазыңыз!":"Введите ФИО!");
+        if(!f || !l) return alert("Аты-жөніңізді жазыңыз!");
         qs = [...db[L]].sort(()=>0.5-Math.random()).slice(0, 20);
         ans = new Array(20).fill(null);
     }
     isStarted = true;
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.remove('hidden');
-    timer = setInterval(() => { 
-        if(!isFinished) { 
-            time--; updateT(); saveState(); 
-            if(time<=0) finish(); 
-        } 
-    }, 1000);
+    timer = setInterval(() => { if(!isFinished) { time--; updateT(); saveState(); if(time<=0) finish(); } }, 1000);
     render();
 }
 
@@ -215,7 +209,7 @@ function closeModal() { document.getElementById('modal').classList.add('hidden')
 function finish() {
     isFinished = true; isStarted = false;
     clearInterval(timer); closeModal();
-    localStorage.removeItem('quiz_progress'); // ТЕСТ БІТКЕНДЕ ТАЗАЛАУ
+    saveState(true); // МӘҢГІЛІК БЛОКТАУ
     
     let r=0; ans.forEach((a,i)=>{if(a===qs[i].c) r++;});
     let p = (viol >= 3) ? (viol - 2) : 0;
@@ -230,18 +224,19 @@ function finish() {
     document.getElementById('r-pen').innerText = p;
 }
 
-function restart() {
-    localStorage.removeItem('quiz_progress');
-    location.reload();
+function updateUI() {
+    L = document.getElementById('lang').value;
+    document.getElementById('txt-blocked').innerText = ui[L].blocked;
+    document.getElementById('txt-blocked-sub').innerText = ui[L].sub_blocked;
+    document.getElementById('txt-final-info').innerText = ui[L].fin_info;
 }
 
 window.onblur = function() {
     if(!isStarted || isFinished || !document.getElementById('modal').classList.contains('hidden')) return;
     viol++; document.getElementById('v-c').innerText = viol; saveState();
-    alert((viol === 1) ? ui[L].v1 : (viol === 2 ? ui[L].v2 : ui[L].v3 + " " + viol));
+    alert((viol === 1) ? ui[L].v1 : (viol === 2 ? ui[L].v2 : ui[L].v3));
 }
 
-// БЕТ ЖҮКТЕЛГЕНДЕ ТЕКСЕРУ
 window.onload = loadState;
 </script>
 </body>
