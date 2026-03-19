@@ -6,9 +6,9 @@
     <title>Informatics Final Exam</title>
     <style>
         :root { --p: #2980b9; --s: #27ae60; --d: #e74c3c; --g: #f5f6fa; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--g); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; user-select: none; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--g); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; user-select: none; }
         .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 700px; text-align: center; border-top: 6px solid var(--p); position: relative; }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         input, select { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #dfe6e9; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
         #timer { font-size: 28px; font-weight: bold; color: var(--d); border: 3px solid var(--d); padding: 10px 25px; border-radius: 12px; display: inline-block; margin-bottom: 25px; background: #fff5f5; }
         .opt { display: block; text-align: left; padding: 16px; margin: 12px 0; border: 2px solid #f1f2f6; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 17px; }
@@ -19,52 +19,53 @@
         .b-next { background: var(--p); } .b-prev { background: #95a5a6; } .b-fin { background: var(--s); }
         #v-msg { color: var(--d); font-weight: bold; margin-top: 20px; padding: 12px; background: #fff0f0; border-radius: 8px; border: 1px solid #fab1a0; }
         
-        /* RESULT DESIGN */
-        #r-score-big { font-size: 130px; font-weight: 900; color: var(--s); margin: 0; line-height: 1; }
+        /* RESULT */
+        #r-score-big { font-size: 120px; font-weight: 900; color: var(--s); margin: 0; line-height: 1; }
         .res-card { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; border: 1px solid #eee; }
         .res-row { display: flex; justify-content: space-around; margin-top: 25px; border-top: 2px solid #fff; padding-top: 20px; }
         .res-val { font-size: 32px; font-weight: 800; color: #2d3436; display: block; }
         .res-txt { font-size: 14px; color: #636e72; font-weight: 600; }
 
         /* MODAL */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 320px; text-align: center; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="box">
     <div id="s-start">
-        <h2 id="t-title">Informatics Final Exam</h2>
-        <p id="t-desc">Questions: 20 | Time: 30 min</p>
+        <h2>Informatics Final Exam</h2>
+        <p>Questions: 20 | Time: 30 min</p>
         <select id="lang" onchange="updateUI()"><option value="kz">Қазақ тілі</option><option value="ru">Русский язык</option></select>
-        <input type="text" id="ln" placeholder="Тегі (Фамилия)"><input type="text" id="fn" placeholder="Аты (Имя)">
-        <button class="b-next" id="btn-start" onclick="start()">Тестті бастау</button>
+        <input type="text" id="ln" placeholder="Тегі (Фамилия)">
+        <input type="text" id="fn" placeholder="Аты (Имя)">
+        <button class="b-next" onclick="start()">Тестті бастау</button>
     </div>
 
     <div id="s-test" class="hidden">
         <div id="timer">30:00</div>
-        <div style="font-weight: 600; color: #7f8c8d; margin-bottom: 10px;">Сұрақ: <span id="q-i">1</span> / 20</div>
-        <h3 id="q-t" style="min-height: 60px; color: #2d3436;"></h3>
+        <div style="color: #7f8c8d; margin-bottom: 10px;">Сұрақ: <span id="q-i">1</span> / 20</div>
+        <h3 id="q-t" style="min-height: 60px;"></h3>
         <div id="opts"></div>
         <div class="btns">
             <button id="p-btn" class="b-prev" onclick="move(-1)">Артқа</button>
             <button id="n-btn" class="b-next" onclick="move(1)">Келесі</button>
             <button id="f-btn" class="b-fin hidden" onclick="showModal()">Аяқтау</button>
         </div>
-        <p id="v-msg"><span id="v-label">Бұзушылықтар</span>: <span id="v-c">0</span></p>
+        <p id="v-msg">Бұзушылықтар: <span id="v-c">0</span></p>
     </div>
 
     <div id="s-res" class="hidden">
-        <h3 id="r-n" style="color: #636e72; margin-bottom: 10px;"></h3>
+        <h3 id="r-n"></h3>
         <div class="res-card">
-            <div id="res-lbl-total" style="font-weight: bold; color: #7f8c8d;">ЖАЛПЫ БАЛЛ</div>
+            <div style="font-weight: bold; color: #7f8c8d;">ЖАЛПЫ БАЛЛ</div>
             <div id="r-score-big">0</div>
-            <div id="r-p" style="font-size: 24px; color: var(--p); font-weight: bold; margin-bottom: 15px;">0%</div>
+            <div id="r-p" style="font-size: 24px; color: var(--p); font-weight: bold;">0%</div>
             <div class="res-row">
-                <div class="res-item"><span class="res-val" id="r-raw">0</span><span class="res-txt" id="res-lbl-test">Тест балы</span></div>
-                <div class="res-item" style="color: var(--d);"><span class="res-val" id="r-viol">0</span><span class="res-txt" id="res-lbl-viol">Бұзушылықтар</span></div>
-                <div class="res-item"><span class="res-val" id="r-pen">0</span><span class="res-txt" id="res-lbl-pen">Шегерілді</span></div>
+                <div class="res-item"><span class="res-val" id="r-raw">0</span><span class="res-txt">Тест балы</span></div>
+                <div class="res-item" style="color: var(--d);"><span class="res-val" id="r-viol">0</span><span class="res-txt">Нарушения</span></div>
+                <div class="res-item"><span class="res-val" id="r-pen">0</span><span class="res-txt">Шегерілді</span></div>
             </div>
         </div>
     </div>
@@ -72,8 +73,8 @@
 
 <div id="m-confirm" class="modal-overlay hidden">
     <div class="modal-content">
-        <h3 id="m-text" style="margin-top: 0;">Аяқтауды растайсыз ба?</h3>
-        <div style="display: flex; gap: 10px; margin-top: 25px;">
+        <h3 id="m-text">Аяқтауды растайсыз ба?</h3>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
             <button style="background: var(--s);" onclick="finish()">Иә</button>
             <button style="background: var(--d);" onclick="hideModal()">Жоқ</button>
         </div>
@@ -81,6 +82,7 @@
 </div>
 
 <script>
+// Сұрақтар базасы (толық 80 сұрақ - 40 kz, 40 ru)
 const db = {
     kz: [
         {q:"1011(2) екілік саны ондық жүйеде нешеге тең?", a:["9","11","13","15"], c:1},
@@ -168,60 +170,47 @@ const db = {
     ]
 };
 
-let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isFinished = false;
+let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isStarted = false, isFinished = false;
 
 function updateUI() {
     L = document.getElementById('lang').value;
-    const t = {
-        kz: { title: "Информатика: Қорытынды Бақылау", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", viol: "Бұзушылықтар", total: "ЖАЛПЫ БАЛЛ", test: "Тест балы", pen: "Шегерілді", confirm: "Тестті аяқтауды растайсыз ба?" },
-        ru: { title: "Информатика: Итоговый Контроль", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", viol: "Нарушения", total: "ИТОГОВЫЙ БАЛЛ", test: "Балл теста", pen: "Снято", confirm: "Подтверждаете завершение?" }
-    }[L];
-    document.getElementById('t-title').innerText = t.title;
-    document.getElementById('t-desc').innerText = t.desc;
-    document.getElementById('btn-start').innerText = t.start;
-    document.getElementById('p-btn').innerText = t.prev;
-    document.getElementById('n-btn').innerText = t.next;
-    document.getElementById('f-btn').innerText = t.fin;
-    document.getElementById('v-label').innerText = t.viol;
-    document.getElementById('res-lbl-total').innerText = t.total;
-    document.getElementById('res-lbl-test').innerText = t.test;
-    document.getElementById('res-lbl-viol').innerText = t.viol;
-    document.getElementById('res-lbl-pen').innerText = t.pen;
-    document.getElementById('m-text').innerText = t.confirm;
+    const t = L === 'kz' ? "Аяқтауды растайсыз ба?" : "Подтверждаете завершение?";
+    document.getElementById('m-text').innerText = t;
 }
 
-function saveProgress() {
-    if (isFinished) return;
-    const data = { qs, cur, ans, time, viol, L, fn: document.getElementById('fn').value, ln: document.getElementById('ln').value };
-    localStorage.setItem('inf_test_v2', JSON.stringify(data));
+function save() {
+    if (!isStarted || isFinished) return;
+    const d = { qs, cur, ans, time, viol, L, fn: document.getElementById('fn').value, ln: document.getElementById('ln').value, isStarted };
+    localStorage.setItem('inf_final_v3', JSON.stringify(d));
 }
 
 function start() {
-    const saved = localStorage.getItem('inf_test_v2');
+    const saved = localStorage.getItem('inf_final_v3');
     if (saved) {
         const d = JSON.parse(saved);
-        qs = d.qs; cur = d.cur; ans = d.ans; time = d.time; viol = d.viol; L = d.L;
-        document.getElementById('fn').value = d.fn; document.getElementById('ln').value = d.ln;
+        qs=d.qs; cur=d.cur; ans=d.ans; time=d.time; viol=d.viol; L=d.L; isStarted=true;
+        document.getElementById('fn').value=d.fn; document.getElementById('ln').value=d.ln;
     } else {
-        let f = document.getElementById('fn').value.trim(), l = document.getElementById('ln').value.trim();
-        if (!f || !l) return alert("ФИО толтырыңыз!");
-        qs = [...db[L]].sort(() => 0.5 - Math.random()).slice(0, 20);
+        let f=document.getElementById('fn').value.trim(), l=document.getElementById('ln').value.trim();
+        if(!f || !l) return alert("Аты-жөніңізді жазыңыз!");
+        qs = [...db[L]].sort(()=>0.5-Math.random()).slice(0, 20);
         ans = new Array(20).fill(null);
+        isStarted = true;
     }
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.remove('hidden');
     timer = setInterval(() => {
         if(!isFinished) {
-            time--; updateTime();
-            if(time%5===0) saveProgress();
+            time--; updateT();
+            if(time%5===0) save();
             if(time<=0) finish();
         }
     }, 1000);
     render();
 }
 
-function updateTime() {
-    let m = Math.floor(time/60), s = time%60;
+function updateT() {
+    let m=Math.floor(time/60), s=time%60;
     document.getElementById('timer').innerText = `${m}:${s<10?'0':''}${s}`;
 }
 
@@ -231,7 +220,7 @@ function render() {
     let b = document.getElementById('opts'); b.innerHTML='';
     qs[cur].a.forEach((o,i)=>{
         let d=document.createElement('div'); d.className='opt'+(ans[cur]===i?' sel':'');
-        d.innerText=o; d.onclick=()=>{ans[cur]=i; render(); saveProgress();}; b.appendChild(d);
+        d.innerText=o; d.onclick=()=>{ans[cur]=i; render(); save();}; b.appendChild(d);
     });
     document.getElementById('p-btn').disabled = (cur===0);
     document.getElementById('n-btn').classList.toggle('hidden', cur===19);
@@ -239,38 +228,38 @@ function render() {
     document.getElementById('v-c').innerText = viol;
 }
 
-function move(n) { cur+=n; render(); saveProgress(); }
+function move(n) { cur+=n; render(); save(); }
 function showModal() { document.getElementById('m-confirm').classList.remove('hidden'); }
 function hideModal() { document.getElementById('m-confirm').classList.add('hidden'); }
 
 function finish() {
-    isFinished = true; clearInterval(timer);
-    localStorage.removeItem('inf_test_v2');
+    isFinished = true; isStarted = false;
+    clearInterval(timer);
+    localStorage.removeItem('inf_final_v3');
     hideModal();
-    let raw = 0; ans.forEach((a,i)=>{if(a===qs[i].c) raw++;});
-    let pen = (viol >= 3) ? (viol - 2) : 0;
-    let final = Math.max(0, raw - pen);
-    
+    let r=0; ans.forEach((a,i)=>{if(a===qs[i].c) r++;});
+    let p=(viol>=3)?(viol-2):0;
     document.getElementById('s-test').classList.add('hidden');
     document.getElementById('s-res').classList.remove('hidden');
     document.getElementById('r-n').innerText = document.getElementById('ln').value + " " + document.getElementById('fn').value;
-    document.getElementById('r-score-big').innerText = final;
-    document.getElementById('r-p').innerText = Math.round((final/20)*100) + "%";
-    document.getElementById('r-raw').innerText = raw;
+    document.getElementById('r-score-big').innerText = Math.max(0, r-p);
+    document.getElementById('r-p').innerText = Math.round((Math.max(0, r-p)/20)*100) + "%";
+    document.getElementById('r-raw').innerText = r;
     document.getElementById('r-viol').innerText = viol;
-    document.getElementById('r-pen').innerText = pen;
+    document.getElementById('r-pen').innerText = p;
 }
 
 window.onblur = function() {
-    if (isFinished || document.getElementById('s-test').classList.contains('hidden')) return;
+    // ТЕК ТЕСТ БАСТАЛҒАНДА ЖӘНЕ МОДАЛЬ ЖАБЫҚ БОЛҒАНДА ҒАНА САНАЙМЫЗ
+    if (!isStarted || isFinished) return;
     if (!document.getElementById('m-confirm').classList.contains('hidden')) return;
-    viol++; document.getElementById('v-c').innerText = viol; saveProgress();
-    alert(L==='kz' ? "ТЕЗ АРТҚА ҚАЙТЫҢЫЗ! БҰЗУШЫЛЫҚ ТІРКЕЛДІ!" : "ВЕРНИТЕСЬ! НАРУШЕНИЕ ЗАРЕГИСТРИРОВАНО!");
+
+    viol++; document.getElementById('v-c').innerText = viol; save();
+    alert(L==='kz' ? "ТЕРЕЗЕДЕН ШЫҚПАҢЫЗ!" : "НЕ ВЫХОДИТЕ ИЗ ОКНА!");
 }
 
 window.onload = () => {
-    if(localStorage.getItem('inf_test_v2')) start();
-    else updateUI();
+    if(localStorage.getItem('inf_final_v3')) start();
 };
 </script>
 </body>
