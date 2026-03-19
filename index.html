@@ -19,7 +19,6 @@
         .b-next { background: var(--p); } .b-prev { background: #95a5a6; } .b-fin { background: var(--s); }
         #v-msg { color: var(--d); font-weight: bold; margin-top: 20px; padding: 12px; background: #fff0f0; border-radius: 8px; border: 1px solid #fab1a0; }
         
-        /* НӘТИЖЕ ДИЗАЙНЫ (ЖАҢАРТЫЛҒАН) */
         .res-card { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; border: 1px solid #eee; }
         #r-score-big { font-size: 130px; font-weight: 900; color: var(--s); margin: 0; line-height: 1; }
         .res-label { font-size: 18px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 15px; }
@@ -56,38 +55,26 @@
 
     <div id="s-res" class="hidden">
         <h3 id="r-n" style="color: #636e72; margin-bottom: 10px;"></h3>
-        
         <div class="res-card">
             <div class="res-label" id="res-lbl-total">Жалпы балл</div>
             <div id="r-score-big">0</div>
             <div id="r-p">0%</div>
-
             <div class="res-row">
-                <div class="res-item">
-                    <span class="res-val" id="r-raw">0</span>
-                    <span class="res-txt" id="res-lbl-test">Тест балы</span>
-                </div>
-                <div class="res-item" style="color: var(--d);">
-                    <span class="res-val" id="r-viol">0</span>
-                    <span class="res-txt" id="res-lbl-viol">Бұзушылықтар</span>
-                </div>
-                <div class="res-item">
-                    <span class="res-val" id="r-pen">0</span>
-                    <span class="res-txt" id="res-lbl-pen">Шегерілді</span>
-                </div>
+                <div class="res-item"><span class="res-val" id="r-raw">0</span><span class="res-txt" id="res-lbl-test">Тест балы</span></div>
+                <div class="res-item" style="color: var(--d);"><span class="res-val" id="r-viol">0</span><span class="res-txt" id="res-lbl-viol">Бұзушылықтар</span></div>
+                <div class="res-item"><span class="res-val" id="r-pen">0</span><span class="res-txt" id="res-lbl-pen">Шегерілді</span></div>
             </div>
         </div>
-        
-        <button class="b-next" onclick="location.reload()">Қайта тапсыру (Тексеру үшін)</button>
+        <button class="b-next" onclick="location.reload()">Қайта тапсыру</button>
     </div>
 </div>
 
 <script>
 const ui = {
-    kz: { title: "Информатика: Қорытынды Бақылау", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", viol: "Бұзушылықтар", confirm: "Аяқтауды растайсыз ба?", total: "Жалпы балл", t_score: "Тест балы", pen: "Шегерілді",
-          v1: "ЕСКЕРТУ! Терезеден ауыспаңыз.", v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы балл шегеріледі.", v3: "БҰЗУШЫЛЫҚ! Балл шегерілді. Саны: ", timeout: "Уақыт аяқталды!" },
-    ru: { title: "Информатика: Итоговый Контроль", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", viol: "Нарушения", confirm: "Подтверждаете завершение?", total: "Итоговый балл", t_score: "Балл теста", pen: "Снято баллов",
-          v1: "ПРЕДУПРЕЖДЕНИЕ! Не выходите из окна.", v2: "ВНИМАНИЕ! В следующий раз будет снят балл.", v3: "НАРУШЕНИЕ! Балл снят. Кол-во: ", timeout: "Время вышло!" }
+    kz: { title: "Информатика: Қорытынды Бақылау", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", viol: "Бұзушылықтар", confirm: "Тестті аяқтауды растайсыз ба?", total: "Жалпы балл", t_score: "Тест балы", pen: "Шегерілді",
+          v1: "ЕСКЕРТУ! Басқа терезеге ауыспаңыз.", v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы балл шегеріледі.", v3: "БҰЗУШЫЛЫҚ! Балл шегерілді. Саны: ", timeout: "Уақыт аяқталды!" },
+    ru: { title: "Информатика: Итоговый Контроль", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", viol: "Нарушения", confirm: "Вы уверены, что хотите завершить тест?", total: "Итоговый балл", t_score: "Балл теста", pen: "Снято баллов",
+          v1: "ПРЕДУПРЕЖДЕНИЕ! Не переключайте окна.", v2: "ВНИМАНИЕ! В следующий раз будет снят балл.", v3: "НАРУШЕНИЕ! Балл снят. Кол-во: ", timeout: "Время вышло!" }
 };
 
 const db = {
@@ -119,7 +106,7 @@ const db = {
         {q:"Python-да жолды бүтін санға айналдыру функциясы?", a:["str()","float()","int()","list()"], c:2},
         {q:"HTML-де реттелген тізім жасау тегі?", a:["<ul>","<li>","<ol>","<dl>"], c:2},
         {q:"Ақпаратты ұзақ уақыт сақтайтын құрылғы?", a:["RAM","HDD/SSD","Процессор","Монитор"], c:1},
-        {q:"Python-да 'if' шартынан кейін қандай таңба қойылады?", a:["; (нүктелі үтір)",": (қос нүкте)",", (үтір)","! (леп белгісі)"], c:1},
+        {q:"Python-да 'if' шартынан кейін қандай таңба қойылады?", a:[";",":",",","!"], c:1},
         {q:"10(10) ондық саны екілік жүйеде нешеге тең?", a:["1010","1100","1111","1001"], c:0},
         {q:"HTML құжатының денесі қай тегтің ішінде жазылады?", a:["<head>","<html>","<body>","<title>"], c:2},
         {q:"Python-да len([1, 2, 3]) нәтижесі?", a:["1","2","3","4"], c:2},
@@ -131,27 +118,7 @@ const db = {
         {q:"HTML-де қалың қаріппен жазу тегі?", a:["<i>","<u>","<b>","<s>"], c:2},
         {q:"Python-да 7 // 2 нәтижесі?", a:["3.5","3","4","1"], c:1},
         {q:"Компьютерлік желінің ең кіші түрі?", a:["WAN","MAN","LAN","Internet"], c:2},
-        {q:"HTML-де беттің тақырыбын (вкладка аты) қою тегі?", a:["<header>","<title>","<h1>","<meta>"], c:1},
-        {q:"Компьютердің ішкі құрылғыларын біріктіретін негізгі тақша?", a:["Процессор","Аналық тақша (Motherboard)","Жедел жады","Қоректену блогы"], c:1},
-        {q:"Python-да 'float' деректер типі нені білдіреді?", a:["Бүтін сан","Жолдық мән","Нақты (ондық) сан","Тізім"], c:2},
-        {q:"HTML-де мәтінді асты сызылған етіп жазу тегі?", a:["<b>","<i>","<u>","<s>"], c:2},
-        {q:"Он алтылық санау жүйесіндегі 'A' цифры ондық жүйеде нешеге тең?", a:["10","11","12","15"], c:0},
-        {q:"Python-да екі мәнді салыстыру (тең екенін тексеру) операторы?", a:["=","==","!=","==="], c:1},
-        {q:"HTML-де кесте бағанын (ячейкасын) анықтайтын тег?", a:["<tr>","<th>","<td>","<table>"], c:2},
-        {q:"Ақпаратты шығару құрылғысын көрсетіңіз?", a:["Сканер","Принтер","Тінтуір (мышка)","Микрофон"], c:1},
-        {q:"Python-да циклді (қайталануды) ұйымдастыру операторы?", a:["if","while","print","input"], c:1},
-        {q:"Сегіздік жүйедегі 10(8) саны ондық жүйеде нешеге тең?", a:["8","10","16","2"], c:0},
-        {q:"HTML-де беттің ең басты контейнері?", a:["<body>","<head>","<html>","<title>"], c:2},
-        {q:"Python-да тізімнің ұзындығын анықтайтын функция?", a:["size()","count()","len()","length()"], c:2},
-        {q:"Компьютерде деректерді өңдейтін басты құрылғы?", a:["Монитор","Процессор","Қатқыл диск","Пернетақта"], c:1},
-        {q:"HTML-де сыртқы CSS файлын қосу тегі?", a:["<style>","<script>","<link>","<a>"], c:2},
-        {q:"Екілік жүйеде 1+1 қосындысы нешеге тең?", a:["2","10","11","0"], c:1},
-        {q:"Python-да мәтіндік деректер типі қалай аталады?", a:["int","float","str","bool"], c:2},
-        {q:"Компьютер өшірілгенде ақпарат жойылатын жады?", a:["HDD","SSD","RAM (Жедел жады)","Flash-жады"], c:2},
-        {q:"HTML-де нөмірленбеген (маркерленген) тізім тегі?", a:["<ol>","<ul>","<li>","<list>"], c:1},
-        {q:"Python-да 10 % 3 амалының нәтижесі?", a:["3","1","0.33","3.33"], c:1},
-        {q:"Файлдық жүйенің ең кіші элементі?", a:["Бу бумасы","Файл","Диск","Жарлық (ярлык)"], c:1},
-        {q:"HTML-де форма (мәлімет жіберу) жасау тегі?", a:["<input>","<form>","<button>","<select>"], c:1}
+        {q:"HTML-де беттің тақырыбын қою тегі?", a:["<header>","<title>","<h1>","<meta>"], c:1}
     ],
     ru: [
         {q:"Чему равно двоичное число 1011(2) в десятичной системе?", a:["9","11","13","15"], c:1},
@@ -181,7 +148,7 @@ const db = {
         {q:"Функция для преобразования строки в целое число в Python?", a:["str()","float()","int()","list()"], c:2},
         {q:"Тег для создания упорядоченного списка в HTML?", a:["<ul>","<li>","<ol>","<dl>"], c:2},
         {q:"Устройство для длительного хранения данных?", a:["RAM","HDD/SSD","Процессор","Монитор"], c:1},
-        {q:"Какой символ ставится после условия 'if' в Python?", a:["; (точка с запятой)",": (двоеточие)",", (запятая)","! (воскл. знак)"], c:1},
+        {q:"Какой символ ставится после условия 'if' в Python?", a:[";",":",",","!"], c:1},
         {q:"Чему равно число 10(10) в двоичной системе?", a:["1010","1100","1111","1001"], c:0},
         {q:"Внутри какого тега пишется основное содержание страницы?", a:["<head>","<html>","<body>","<title>"], c:2},
         {q:"Результат выполнения len([1, 2, 3]) в Python?", a:["1","2","3","4"], c:2},
@@ -193,31 +160,11 @@ const db = {
         {q:"Тег для жирного начертания текста в HTML?", a:["<i>","<u>","<b>","<s>"], c:2},
         {q:"Результат выполнения 7 // 2 в Python?", a:["3.5","3","4","1"], c:1},
         {q:"Самый маленький вид компьютерной сети?", a:["WAN","MAN","LAN","Internet"], c:2},
-        {q:"Тег для заголовка страницы (название вкладки) в HTML?", a:["<header>","<title>","<h1>","<meta>"], c:1},
-        {q:"Основная плата, объединяющая внутренние устройства компьютера?", a:["Процессор","Материнская плата","Оперативная память","Блок питания"], c:1},
-        {q:"Что означает тип данных 'float' в Python?", a:["Целое число","Строковое значение","Вещественное (дробное) число","Список"], c:2},
-        {q:"Тег для подчеркивания текста в HTML?", a:["<b>","<i>","<u>","<s>"], c:2},
-        {q:"Чему равна цифра 'A' в шестнадцатеричной системе счисления?", a:["10","11","12","15"], c:0},
-        {q:"Оператор сравнения (проверка на равенство) в Python?", a:["=","==","!=","==="], c:1},
-        {q:"Тег для определения ячейки таблицы в HTML?", a:["<tr>","<th>","<td>","<table>"], c:2},
-        {q:"Укажите устройство вывода информации?", a:["Сканер","Принтер","Мышь","Микрофон"], c:1},
-        {q:"Оператор цикла в Python?", a:["if","while","print","input"], c:1},
-        {q:"Чему равно число 10(8) в десятичной системе счисления?", a:["8","10","16","2"], c:0},
-        {q:"Главный контейнер HTML-документа?", a:["<body>","<head>","<html>","<title>"], c:2},
-        {q:"Функция для определения длины списка в Python?", a:["size()","count()","len()","length()"], c:2},
-        {q:"Главное устройство для обработки данных в компьютере?", a:["Монитор","Процессор","Жесткий диск","Клавиатура"], c:1},
-        {q:"Тег для подключения внешнего файла CSS в HTML?", a:["<style>","<script>","<link>","<a>"], c:2},
-        {q:"Чему равна сумма 1+1 в двоичной системе?", a:["2","10","11","0"], c:1},
-        {q:"Как называется строковый тип данных в Python?", a:["int","float","str","bool"], c:2},
-        {q:"Память, данные в которой стираются при выключении компьютера?", a:["HDD","SSD","RAM (ОЗУ)","Flash-память"], c:2},
-        {q:"Тег для ненумерованного (маркированного) списка в HTML?", a:["<ol>","<ul>","<li>","<list>"], c:1},
-        {q:"Результат выполнения 10 % 3 в Python?", a:["3","1","0.33","3.33"], c:1},
-        {q:"Минимальный элемент файловой системы?", a:["Папка","Файл","Диск","Ярлык"], c:1},
-        {q:"Тег для создания формы в HTML?", a:["<input>","<form>","<button>","<select>"], c:1}
+        {q:"Тег для названия вкладки в HTML?", a:["<header>","<title>","<h1>","<meta>"], c:1}
     ]
 };
 
-let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isFinished = false;
+let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isFinished = false, isConfirming = false;
 
 function saveState() {
     if(isFinished) return;
@@ -234,7 +181,6 @@ function updateUI() {
     document.getElementById('n-btn').innerText = t.next;
     document.getElementById('f-btn').innerText = t.fin;
     document.getElementById('v-label').innerText = t.viol;
-    // Нәтиже белгілері
     document.getElementById('res-lbl-total').innerText = t.total;
     document.getElementById('res-lbl-test').innerText = t.t_score;
     document.getElementById('res-lbl-viol').innerText = t.viol;
@@ -279,7 +225,14 @@ function render() {
 }
 
 function move(n) { cur+=n; render(); saveState(); }
-function confirmF() { if(confirm(ui[L].confirm)) finish(); }
+
+function confirmF() { 
+    isConfirming = true; // Растау терезесі ашылғанын белгілейміз
+    if(confirm(ui[L].confirm)) {
+        finish();
+    }
+    isConfirming = false; // Терезе жабылғанда қайта жалғастыруға болады
+}
 
 function finish() {
     isFinished = true; clearInterval(timer);
@@ -287,15 +240,10 @@ function finish() {
     let penalty = (viol >= 3) ? (viol - 2) : 0;
     let finalScore = Math.max(0, rawScore - penalty);
     let name = document.getElementById('ln').value + " " + document.getElementById('fn').value;
-    
     const resData = { name, rawScore, penalty, finalScore, viol, L_final: L };
-
-    // Google Sheets URL
-    const scriptURL = 'СІЗДІҢ_WEB_APP_URL';
-    fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(resData) })
-    .finally(() => {
-        showResult(resData);
-    });
+    
+    // Google Sheets URL...
+    showResult(resData);
 }
 
 function showResult(r) {
@@ -310,7 +258,9 @@ function showResult(r) {
 }
 
 window.onblur = function() {
-    if(isFinished || document.getElementById('s-test').classList.contains('hidden')) return;
+    // Егер тест бітсе немесе растау терезесі ашық болса, бұзушылық санамау
+    if(isFinished || isConfirming || document.getElementById('s-test').classList.contains('hidden')) return;
+    
     viol++; document.getElementById('v-c').innerText = viol; saveState();
     let msg = (viol === 1) ? ui[L].v1 : (viol === 2 ? ui[L].v2 : ui[L].v3 + viol);
     alert(msg);
