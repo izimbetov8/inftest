@@ -19,13 +19,15 @@
         .b-next { background: var(--p); } .b-prev { background: #95a5a6; } .b-fin { background: var(--s); }
         #v-msg { color: var(--d); font-weight: bold; margin-top: 20px; padding: 12px; background: #fff0f0; border-radius: 8px; border: 1px solid #fab1a0; }
         
-        /* RESULT DESIGN */
-        #r-score-big { font-size: 120px; font-weight: 900; color: var(--p); margin: 0; line-height: 1; text-shadow: 2px 2px 5px rgba(0,0,0,0.05); }
-        #r-score-label { font-size: 22px; color: #7f8c8d; font-weight: 600; margin-top: -5px; margin-bottom: 10px; text-transform: uppercase; }
-        #r-p { font-size: 38px; font-weight: bold; color: #2d3436; margin: 10px 0 25px 0; background: #f1f2f6; display: inline-block; padding: 5px 20px; border-radius: 50px; }
-        #r-formula { font-size: 22px; color: #2d3436; font-weight: 600; background: #fff; padding: 15px 25px; border-radius: 15px; display: block; border: 2px dashed #bdc3c7; margin-top: 10px; }
-        #r-v { font-size: 16px; color: #b2bec3; font-weight: 400; margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px; }
-        .already-done { color: var(--d); font-size: 18px; font-weight: bold; margin-bottom: 20px; background: #fff5f5; padding: 12px; border-radius: 10px; border: 1px solid #fab1a0; }
+        /* НӘТИЖЕ ДИЗАЙНЫ (ЖАҢАРТЫЛҒАН) */
+        .res-card { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; border: 1px solid #eee; }
+        #r-score-big { font-size: 130px; font-weight: 900; color: var(--s); margin: 0; line-height: 1; }
+        .res-label { font-size: 18px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 15px; }
+        .res-row { display: flex; justify-content: space-around; margin-top: 25px; border-top: 2px solid #fff; padding-top: 20px; }
+        .res-item { flex: 1; }
+        .res-val { font-size: 32px; font-weight: 800; color: #2d3436; display: block; }
+        .res-txt { font-size: 14px; color: #636e72; font-weight: 600; }
+        #r-p { font-size: 24px; color: var(--p); font-weight: bold; margin-top: 10px; display: block; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -53,26 +55,39 @@
     </div>
 
     <div id="s-res" class="hidden">
-        <div id="already-msg" class="already-done hidden"></div>
-        <h3 id="r-n" style="margin-bottom: 20px; color: #636e72; font-size: 20px;"></h3>
+        <h3 id="r-n" style="color: #636e72; margin-bottom: 10px;"></h3>
         
-        <div id="r-score-big">0</div>
-        <div id="r-score-label">Қорытынды балл</div>
+        <div class="res-card">
+            <div class="res-label" id="res-lbl-total">Жалпы балл</div>
+            <div id="r-score-big">0</div>
+            <div id="r-p">0%</div>
+
+            <div class="res-row">
+                <div class="res-item">
+                    <span class="res-val" id="r-raw">0</span>
+                    <span class="res-txt" id="res-lbl-test">Тест балы</span>
+                </div>
+                <div class="res-item" style="color: var(--d);">
+                    <span class="res-val" id="r-viol">0</span>
+                    <span class="res-txt" id="res-lbl-viol">Бұзушылықтар</span>
+                </div>
+                <div class="res-item">
+                    <span class="res-val" id="r-pen">0</span>
+                    <span class="res-txt" id="res-lbl-pen">Шегерілді</span>
+                </div>
+            </div>
+        </div>
         
-        <div id="r-p">0%</div>
-        
-        <div id="r-formula">0 - 0 = 0</div>
-        
-        <div id="r-v"></div>
+        <button class="b-next" onclick="location.reload()">Қайта тапсыру (Тексеру үшін)</button>
     </div>
 </div>
 
 <script>
 const ui = {
-    kz: { title: "Информатика: Қорытынды Бақылау", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", viol: "Бұзушылықтар", confirm: "Тестті аяқтауды растайсыз ба?", score: "Қорытынды балл", formula: "Тест балы - Шегерім = Қорытынды",
-          v1: "ЕСКЕРТУ! Басқа терезеге ауыспаңыз.", v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы балл шегеріледі!", v3: "БҰЗУШЫЛЫҚ! Балл шегерілді. Саны: ", timeout: "Уақыт аяқталды!", done: "Сіз бұл тестті тапсырып қойдыңыз!" },
-    ru: { title: "Информатика: Итоговый Контроль", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", viol: "Нарушения", confirm: "Вы уверены?", score: "Итоговый балл", formula: "Балл теста - Вычет = Итог",
-          v1: "ПРЕДУПРЕЖДЕНИЕ! Не переключайте окна.", v2: "ВНИМАНИЕ! В следующий раз будет снят балл!", v3: "НАРУШЕНИЕ! Балл снят. Кол-во: ", timeout: "Время вышло!", done: "Вы уже прошли этот тест!" }
+    kz: { title: "Информатика: Қорытынды Бақылау", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", viol: "Бұзушылықтар", confirm: "Аяқтауды растайсыз ба?", total: "Жалпы балл", t_score: "Тест балы", pen: "Шегерілді",
+          v1: "ЕСКЕРТУ! Терезеден ауыспаңыз.", v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы балл шегеріледі.", v3: "БҰЗУШЫЛЫҚ! Балл шегерілді. Саны: ", timeout: "Уақыт аяқталды!" },
+    ru: { title: "Информатика: Итоговый Контроль", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", viol: "Нарушения", confirm: "Подтверждаете завершение?", total: "Итоговый балл", t_score: "Балл теста", pen: "Снято баллов",
+          v1: "ПРЕДУПРЕЖДЕНИЕ! Не выходите из окна.", v2: "ВНИМАНИЕ! В следующий раз будет снят балл.", v3: "НАРУШЕНИЕ! Балл снят. Кол-во: ", timeout: "Время вышло!" }
 };
 
 const db = {
@@ -124,27 +139,10 @@ const db = {
 
 let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isFinished = false;
 
-// ҚАЙТА ТАПСЫРУДЫ БҰҒАТТАУ (Тексеру үшін уақытша false қылыңыз)
-const BLOCK_RETAKE = true; 
-
 function saveState() {
     if(isFinished) return;
     localStorage.setItem('quiz_save', JSON.stringify({ qs, cur, ans, time, viol, L, fn: document.getElementById('fn').value, ln: document.getElementById('ln').value }));
 }
-
-window.onload = function() {
-    const res = localStorage.getItem('quiz_result');
-    if(res && BLOCK_RETAKE) return showResult(JSON.parse(res), true);
-
-    const saved = localStorage.getItem('quiz_save');
-    if(saved) {
-        const s = JSON.parse(saved);
-        qs=s.qs; cur=s.cur; ans=s.ans; time=s.time; viol=s.viol; L=s.L;
-        document.getElementById('fn').value=s.fn; document.getElementById('ln').value=s.ln;
-        document.getElementById('lang').value=L;
-        updateUI(); start(true);
-    }
-};
 
 function updateUI() {
     L = document.getElementById('lang').value;
@@ -156,7 +154,11 @@ function updateUI() {
     document.getElementById('n-btn').innerText = t.next;
     document.getElementById('f-btn').innerText = t.fin;
     document.getElementById('v-label').innerText = t.viol;
-    document.getElementById('r-score-label').innerText = t.score;
+    // Нәтиже белгілері
+    document.getElementById('res-lbl-total').innerText = t.total;
+    document.getElementById('res-lbl-test').innerText = t.t_score;
+    document.getElementById('res-lbl-viol').innerText = t.viol;
+    document.getElementById('res-lbl-pen').innerText = t.pen;
 }
 
 function start(isReload = false) {
@@ -202,46 +204,29 @@ function confirmF() { if(confirm(ui[L].confirm)) finish(); }
 function finish() {
     isFinished = true; clearInterval(timer);
     let rawScore=0; ans.forEach((a,i)=>{if(a===qs[i].c) rawScore++;});
-    
-    // БАЛЛ ЕСЕПТЕУ: АЛҒАШҚЫ 2 БҰЗУШЫЛЫҚ ТЕГІН
     let penalty = (viol >= 3) ? (viol - 2) : 0;
     let finalScore = Math.max(0, rawScore - penalty);
-    
     let name = document.getElementById('ln').value + " " + document.getElementById('fn').value;
+    
     const resData = { name, rawScore, penalty, finalScore, viol, L_final: L };
 
-    // GOOGLE SCRIPT URL (ӨЗІҢІЗДІКІН ҚОЙЫҢЫЗ)
+    // Google Sheets URL
     const scriptURL = 'СІЗДІҢ_WEB_APP_URL';
-    
     fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(resData) })
-    .then(() => {
-        localStorage.setItem('quiz_result', JSON.stringify(resData));
-        localStorage.removeItem('quiz_save');
-        showResult(resData, false);
-    }).catch(() => {
-        localStorage.setItem('quiz_result', JSON.stringify(resData));
-        showResult(resData, false);
+    .finally(() => {
+        showResult(resData);
     });
 }
 
-function showResult(r, alreadyDone) {
-    document.getElementById('s-start').classList.add('hidden');
+function showResult(r) {
     document.getElementById('s-test').classList.add('hidden');
     document.getElementById('s-res').classList.remove('hidden');
-    if(alreadyDone) {
-        document.getElementById('already-msg').innerText = ui[r.L_final].done;
-        document.getElementById('already-msg').classList.remove('hidden');
-    }
     document.getElementById('r-n').innerText = r.name;
     document.getElementById('r-score-big').innerText = r.finalScore;
     document.getElementById('r-p').innerText = Math.round((r.finalScore/20)*100) + "%";
-    
-    // ФОРМУЛА: ТЕСТ БАЛЫ - ШЕГЕРІМ = ҚОРЫТЫНДЫ
-    document.getElementById('r-formula').innerText = `${r.rawScore} - ${r.penalty} = ${r.finalScore}`;
-    
-    if(r.viol > 0) {
-        document.getElementById('r-v').innerText = (r.L_final==='kz'?"Бұзушылық саны: ":"Нарушений: ") + r.viol;
-    }
+    document.getElementById('r-raw').innerText = r.rawScore;
+    document.getElementById('r-viol').innerText = r.viol;
+    document.getElementById('r-pen').innerText = r.penalty;
 }
 
 window.onblur = function() {
