@@ -164,7 +164,12 @@ function saveState(final = false) {
     if(final) {
         let r=0; ans.forEach((a,i)=>{if(a===qs[i].c) r++;});
         let p = (viol >= 3) ? (viol - 2) : 0;
-        localStorage.setItem('quiz_result', JSON.stringify({ fn: document.getElementById('fn').value, ln: document.getElementById('ln').value, r, p, viol, L }));
+        // МІНЕ ОНЫҢ ӨЗГЕРТІЛГЕН ҚАТАРЫ: L: L қосылды
+        localStorage.setItem('quiz_result', JSON.stringify({ 
+            fn: document.getElementById('fn').value, 
+            ln: document.getElementById('ln').value, 
+            r, p, viol, L: L 
+        }));
         localStorage.removeItem('quiz_progress');
         return;
     }
@@ -173,15 +178,16 @@ function saveState(final = false) {
 
 function loadState() {
     const res = localStorage.getItem('quiz_result');
-    if(res) { showResult(JSON.parse(res)); return; }
-    const saved = localStorage.getItem('quiz_progress');
-    if(saved) {
-        const d = JSON.parse(saved);
-        qs = d.qs; cur = d.cur; ans = d.ans; time = d.time; viol = d.viol; L = d.L;
-        document.getElementById('fn').value = d.fn; document.getElementById('ln').value = d.ln;
-        document.getElementById('lang').value = L;
-        updateUI(); start(true);
-    } else { updateUI(); }
+    if(res) { 
+        const d = JSON.parse(res);
+        // МІНЕ ӨЗГЕРТІЛГЕН ҚАТАРЛАР:
+        L = d.L || 'kz'; // Сақталған тілді алу
+        document.getElementById('lang').value = L; // Селектті сол тілге қою
+        updateUI(); // Барлық жазуларды сол тілге аудару
+        showResult(d); 
+        return; 
+    }
+    // ... қалған бөлігі (прогресті жүктеу)
 }
 
 function start(resume = false) {
