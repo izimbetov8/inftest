@@ -18,7 +18,12 @@
         button { flex: 1; padding: 16px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
         .b-next { background: var(--p); } .b-prev { background: #95a5a6; } .b-fin { background: var(--s); }
         #v-msg { color: var(--d); font-weight: bold; margin-top: 20px; padding: 12px; background: #fff0f0; border-radius: 8px; border: 1px solid #fab1a0; }
-        .already-done { color: var(--d); font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+        
+        /* Нәтиже экранының дизайны */
+        #r-p { font-size: 85px; font-weight: 900; color: var(--p); margin: 5px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.05); }
+        #r-b { font-size: 32px; font-weight: bold; color: #2d3436; margin-bottom: 15px; }
+        #r-v { font-size: 18px; color: #636e72; font-weight: 500; border-top: 1px solid #eee; pt: 10px; margin-top: 15px; }
+        .already-done { color: var(--d); font-size: 18px; font-weight: bold; margin-bottom: 15px; background: #fff5f5; padding: 10px; border-radius: 10px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -47,20 +52,20 @@
 
     <div id="s-res" class="hidden">
         <div id="already-msg" class="already-done hidden"></div>
-        <h2 id="t-res-h" style="color:var(--s); font-size: 32px;">Нәтиже</h2>
-        <h3 id="r-n"></h3>
-        <div id="r-p" style="font-size: 65px; font-weight: bold; color: var(--p); margin: 20px 0;">0%</div>
-        <p id="r-b" style="font-size: 22px; font-weight: 500;"></p>
-        <p id="r-v" style="color: var(--d); font-weight: bold; font-size: 19px; margin-top: 15px; border: 2px dashed var(--d); padding: 10px; border-radius: 10px; display: inline-block;"></p>
+        <h2 id="t-res-h" style="color:var(--s); font-size: 28px; margin-bottom: 5px;">Нәтиже</h2>
+        <h3 id="r-n" style="margin-top: 0; color: #636e72;"></h3>
+        <div id="r-p">0%</div>
+        <div id="r-b">0 / 20</div>
+        <div id="r-v"></div>
     </div>
 </div>
 
 <script>
 const ui = {
-    kz: { title: "Информатика: Қорытынды Бақылау", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", viol: "Бұзушылықтар", confirm: "Тестті аяқтауды растайсыз ба?", score: "Жалпы балл", res: "Тест нәтижесі", 
-          v1: "ЕСКЕРТУ! Басқа терезеге ауыспаңыз. 1-ші ескерту.", v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы -1 балл шегеріледі!", v3: "БҰЗУШЫЛЫҚ! 1 балл шегерілді. Айыппұл: ", timeout: "Уақыт аяқталды!", done: "Сіз бұл тестті тапсырып қойдыңыз!" },
-    ru: { title: "Информатика: Итоговый Контроль", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", viol: "Нарушения", confirm: "Вы уверены, что хотите завершить тест?", score: "Общий балл", res: "Результат теста", 
-          v1: "ПРЕДУПРЕЖДЕНИЕ! Не переключайте окна. 1-е предупреждение.", v2: "ВНИМАНИЕ! В следующий раз будет снят 1 балл!", v3: "НАРУШЕНИЕ! Снят 1 балл. Текущий штраф: ", timeout: "Время вышло!", done: "Вы уже прошли этот тест!" }
+    kz: { title: "Информатика: Қорытынды Бақылау", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", viol: "Бұзушылықтар", confirm: "Тестті аяқтауды растайсыз ба?", score: "Нәтиже", res: "Тест нәтижесі", 
+          v1: "ЕСКЕРТУ! Басқа терезеге ауыспаңыз. 1-ші ескерту.", v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы 1 балл шегеріледі!", v3: "БҰЗУШЫЛЫҚ! 1 балл шегерілді. Жалпы саны: ", timeout: "Уақыт аяқталды!", done: "Сіз бұл тестті тапсырып қойдыңыз!" },
+    ru: { title: "Информатика: Итоговый Контроль", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", viol: "Нарушения", confirm: "Вы уверены, что хотите завершить тест?", score: "Результат", res: "Результат теста", 
+          v1: "ПРЕДУПРЕЖДЕНИЕ! Не переключайте окна. 1-е предупреждение.", v2: "ВНИМАНИЕ! В следующий раз будет снят 1 балл!", v3: "НАРУШЕНИЕ! Снят 1 балл. Общее кол-во: ", timeout: "Время вышло!", done: "Вы уже прошли этот тест!" }
 };
 
 const db = {
@@ -70,43 +75,43 @@ const db = {
         {q:"Python программалау тілінде қалдықты табу операторы?", a:["// (бүтін бөлу)","% (пайыз белгісі)","** (дәрежелеу)","/ (бөлу)"], c:1},
         {q:"HTML құжатындағы ең үлкен деңгейлі тақырып тегі?", a:["<h6> тегі","<head> тегі","<h1> тегі","<header> тегі"], c:2},
         {q:"Логикалық 'ЖӘНЕ' (AND) амалы қалай аталады?", a:["Дизъюнкция","Конъюнкция","Инверсия","Импликация"], c:1},
-        {q:"1 Гбайт (Гигабайт) көлемінде неше Мбайт (Мегабайт) бар?", a:["1000 Мбайт","1024 Мбайт","1048 Мбайт","2048 Мбайт"], c:1},
-        {q:"Python-да тізімнің (list) соңына элемент қосу әдісі?", a:["add() әдісі","append() әдісі","insert() әдісі","extend() әдісі"], c:1},
-        {q:"Логикалық терістеу (NOT) амалының белгісі?", a:["∧ (Конъюнкция)","∨ (Дизъюнкция)","¬ (Инверсия)","→ (Импликация)"], c:2},
+        {q:"1 Гбайт көлемінде неше Мбайт бар?", a:["1000 Мбайт","1024 Мбайт","1048 Мбайт","2048 Мбайт"], c:1},
+        {q:"Python-да тізімнің (list) соңына элемент қосу әдісі?", a:["add()","append()","insert()","extend()"], c:1},
+        {q:"Логикалық терістеу (NOT) амалының белгісі?", a:["∧","∨","¬","→"], c:2},
         {q:"Компьютердегі ақпарат өлшеудің ең кіші бірлігі?", a:["1 Байт","1 Килобайт","1 Бит","1 Мегабайт"], c:2},
-        {q:"HTML-де гиперсілтеме жасау үшін қолданылатын тег?", a:["<link> тегі","<a> тегі","<href> атрибуты","<nav> тегі"], c:1},
-        {q:"Python-да print(2**3) кодының нәтижесі неше болады?", a:["5 саны","6 саны","8 саны","9 саны"], c:2},
-        {q:"Сегіздік санау жүйесінің негізі нешеге тең?", a:["2 саны","8 саны","10 саны","16 саны"], c:1},
-        {q:"HTML-де кестенің жолын анықтайтын тег?", a:["<td> тегі","<th> тегі","<tr> тегі","<table> тегі"], c:2},
-        {q:"A=True, B=False болса, 'A AND B' логикалық амалының мәні?", a:["True (Ақиқат)","False (Жалған)","None (Бос)","Error (Қате)"], c:1},
-        {q:"Python-да пайдаланушыдан мәліметтерді енгізуді сұрайтын функция?", a:["print() функциясы","input() функциясы","read() функциясы","get() функциясы"], c:1},
-        {q:"HTML файлының стандартты кеңейтілімі қандай?", a:[".txt форматы",".html форматы",".css форматы",".javascript форматы"], c:1},
-        {q:"Он алтылық жүйедегі 10(16) саны ондық жүйеде неше болады?", a:["10 саны","16 саны","20 саны","32 саны"], c:1},
-        {q:"Компьютердің жедел жады қалай аталады?", a:["ROM жады","RAM жады","HDD дискісі","SSD дискісі"], c:1},
-        {q:"Python программалау тілінің авторы кім?", a:["Билл Гейтс","Гвидо ван Россум","Стив Джобс","Марк Цукерберг"], c:1},
-        {q:"HTML-де мәтінді келесі жолға көшіруге арналған тег?", a:["<next> тегі","<br> тегі","<hr> тегі","<p> тегі"], c:1}
+        {q:"HTML-де гиперсілтеме жасау үшін қолданылатын тег?", a:["<link>","<a>","<href>","<nav>"], c:1},
+        {q:"Python-да print(2**3) кодының нәтижесі?", a:["5","6","8","9"], c:2},
+        {q:"Сегіздік санау жүйесінің негізі нешеге тең?", a:["2","8","10","16"], c:1},
+        {q:"HTML-де кестенің жолын анықтайтын тег?", a:["<td>","<th>","<tr>","<table>"], c:2},
+        {q:"A=True, B=False болса, 'A AND B' мәні?", a:["True","False","None","Error"], c:1},
+        {q:"Python-да мәлімет енгізу функциясы?", a:["print()","input()","read()","get()"], c:1},
+        {q:"HTML файлының стандартты кеңейтілімі?", a:[".txt",".html",".css",".js"], c:1},
+        {q:"Он алтылық жүйедегі 10(16) саны ондық жүйеде?", a:["10","16","20","32"], c:1},
+        {q:"Жедел жады қалай аталады?", a:["ROM","RAM","HDD","SSD"], c:1},
+        {q:"Python тілінің авторы кім?", a:["Билл Гейтс","Гвидо ван Россум","Стив Джобс","Марк Цукерберг"], c:1},
+        {q:"HTML-де мәтінді келесі жолға көшіру тегі?", a:["<next>","<br>","<hr>","<p>"], c:1}
     ],
     ru: [
-        {q:"Чему равно двоичное число 1011(2) в десятичной системе?", a:["Число 9","Число 11","Число 13","Число 15"], c:1},
-        {q:"Какое число следует сразу за 17(8) в восьмеричной системе?", a:["Число 18","Число 20","Число 21","Число 22"], c:1},
-        {q:"Оператор нахождения остатка от деления в языке Python?", a:["// (целочисленное)","% (процент)","** (степень)","/ (деление)"], c:1},
-        {q:"Тег самого крупного заголовка в документе HTML?", a:["Тег <h6>","Тег <head>","Тег <h1>","Тег <header>"], c:2},
+        {q:"Чему равно двоичное число 1011(2) в десятичной системе?", a:["9","11","13","15"], c:1},
+        {q:"Какое число следует за 17(8) в восьмеричной системе?", a:["18","20","21","22"], c:1},
+        {q:"Оператор нахождения остатка от деления в Python?", a:["//","%","**","/"], c:1},
+        {q:"Тег самого крупного заголовка в HTML?", a:["<h6>","<head>","<h1>","<header>"], c:2},
         {q:"Как называется логическая операция 'И' (AND)?", a:["Дизъюнкция","Конъюнкция","Инверсия","Импликация"], c:1},
-        {q:"Сколько Мбайт (Мегабайт) содержится в 1 Гбайте (Гигабайте)?", a:["1000 Мбайт","1024 Мбайт","1048 Мбайт","2048 Мбайт"], c:1},
-        {q:"Метод добавления элемента в конец списка (list) в Python?", a:["Метод add()","Метод append()","Метод insert()","Метод extend()"], c:1},
-        {q:"Символ логического отрицания (NOT)?", a:["∧ (Конъюнкция)","∨ (Дизъюнкция)","¬ (Инверсия)","→ (Импликация)"], c:2},
-        {q:"Минимальная единица измерения информации в компьютере?", a:["1 Байт","1 Килобайт","1 Бит","1 Мегабайт"], c:2},
-        {q:"Тег HTML, используемый для создания гиперссылок?", a:["Тег <link>","Тег <a>","Атрибут <href>","Тег <nav>"], c:1},
-        {q:"Результат выполнения кода print(2**3) в Python?", a:["Число 5","Число 6","Число 8","Число 9"], c:2},
-        {q:"Чему равно основание восьмеричной системы счисления?", a:["Число 2","Число 8","Число 10","Число 16"], c:1},
-        {q:"Тег HTML, определяющий строку таблицы (table row)?", a:["Тег <td>","Тег <th>","Тег <tr>","Тег <table>"], c:2},
-        {q:"Если A=True, B=False, чему равно значение 'A AND B'?", a:["True (Истина)","False (Ложь)","None (Пусто)","Error (Ошибка)"], c:1},
-        {q:"Функция в Python для ввода данных пользователем с клавиатуры?", a:["Функция print()","Функция input()","Функция read()","Функция get()"], c:1},
-        {q:"Стандартное расширение файлов формата HTML?", a:[".txt формат",".html формат",".css формат",".js формат"], c:1},
-        {q:"Чему равно число 10(16) в десятичной системе счисления?", a:["Число 10","Число 16","Число 20","Число 32"], c:1},
-        {q:"Как называется оперативная память компьютера?", a:["Память ROM","Память RAM","Диск HDD","Диск SSD"], c:1},
-        {q:"Кто является создателем языка программирования Python?", a:["Билл Гейтс","Гвидо ван Россум","Стив Джобс","Марк Цукерберг"], c:1},
-        {q:"Тег HTML для принудительного переноса строки?", a:["Тег <next>","Тег <br>","Тег <hr>","Тег <p>"], c:1}
+        {q:"Сколько Мбайт в 1 Гбайте?", a:["1000","1024","1048","2048"], c:1},
+        {q:"Метод добавления элемента в конец списка в Python?", a:["add()","append()","insert()","extend()"], c:1},
+        {q:"Символ логического отрицания (NOT)?", a:["∧","∨","¬","→"], c:2},
+        {q:"Минимальная единица измерения информации?", a:["1 Байт","1 Килобайт","1 Бит","1 Мегабайт"], c:2},
+        {q:"Тег HTML для создания гиперссылок?", a:["<link>","<a>","<href>","<nav>"], c:1},
+        {q:"Результат выполнения print(2**3) в Python?", a:["5","6","8","9"], c:2},
+        {q:"Основание восьмеричной системы счисления?", a:["2","8","10","16"], c:1},
+        {q:"Тег HTML для строки таблицы?", a:["<td>","<th>","<tr>","<table>"], c:2},
+        {q:"Если A=True, B=False, чему равно 'A AND B'?", a:["True","False","None","Error"], c:1},
+        {q:"Функция в Python для ввода данных?", a:["print()","input()","read()","get()"], c:1},
+        {q:"Стандартное расширение файлов HTML?", a:[".txt",".html",".css",".js"], c:1},
+        {q:"Чему равно число 10(16) в десятичной системе?", a:["10","16","20","32"], c:1},
+        {q:"Как называется оперативная память?", a:["ROM","RAM","HDD","SSD"], c:1},
+        {q:"Кто создал язык Python?", a:["Билл Гейтс","Гвидо ван Россум","Стив Джобс","Марк Цукерберг"], c:1},
+        {q:"Тег HTML для переноса строки?", a:["<next>","<br>","<hr>","<p>"], c:1}
     ]
 };
 
@@ -119,10 +124,8 @@ function saveState() {
 
 window.onload = function() {
     const res = localStorage.getItem('quiz_result');
-    if(res) {
-        showResult(JSON.parse(res), true);
-        return;
-    }
+    if(res) return showResult(JSON.parse(res), true);
+
     const saved = localStorage.getItem('quiz_save');
     if(saved) {
         const s = JSON.parse(saved);
@@ -191,10 +194,24 @@ function finish() {
     let penalty = (viol >= 3) ? (viol - 2) : 0;
     let finalScore = Math.max(0, rawScore - penalty);
     let name = document.getElementById('ln').value + " " + document.getElementById('fn').value;
-    const resData = { name, finalScore, rawScore, penalty, viol, L_final: L };
-    localStorage.setItem('quiz_result', JSON.stringify(resData));
-    localStorage.removeItem('quiz_save');
-    showResult(resData, false);
+    const resData = { name, finalScore, viol, L_final: L };
+
+    // ОСЫ ЖЕРГЕ GOOGLE SCRIPT URL ҚОЙЫҢЫЗ
+    const scriptURL = 'СІЗДІҢ_WEB_APP_URL';
+    
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(resData)
+    }).then(() => {
+        localStorage.setItem('quiz_result', JSON.stringify(resData));
+        localStorage.removeItem('quiz_save');
+        showResult(resData, false);
+    }).catch(e => {
+        console.error(e);
+        localStorage.setItem('quiz_result', JSON.stringify(resData));
+        showResult(resData, false);
+    });
 }
 
 function showResult(r, alreadyDone) {
@@ -209,8 +226,8 @@ function showResult(r, alreadyDone) {
     document.getElementById('r-n').innerText = r.name;
     document.getElementById('r-p').innerText = Math.round((r.finalScore/20)*100) + "%";
     document.getElementById('r-b').innerText = ui[r.L_final].score + `: ${r.finalScore} / 20`;
-    if(r.penalty > 0 || r.viol > 0) {
-        document.getElementById('r-v').innerText = (r.L_final === 'kz' ? "Айыппұл: " : "Штраф: ") + r.penalty + " (" + (r.L_final === 'kz' ? "Бұзушылық: " : "Нарушений: ") + r.viol + ")";
+    if(r.viol > 0) {
+        document.getElementById('r-v').innerText = (r.L_final === 'kz' ? "Бұзушылықтар саны: " : "Количество нарушений: ") + r.viol;
     }
 }
 
@@ -218,7 +235,7 @@ window.onblur = function() {
     if(document.getElementById('s-test').classList.contains('hidden') || isFinished || localStorage.getItem('quiz_result')) return;
     viol++; document.getElementById('v-c').innerText = viol; saveState();
     let p = (viol >= 3) ? (viol - 2) : 0;
-    let msg = (viol === 1) ? ui[L].v1 : (viol === 2 ? ui[L].v2 : ui[L].v3 + p);
+    let msg = (viol === 1) ? ui[L].v1 : (viol === 2 ? ui[L].v2 : ui[L].v3 + viol);
     alert(msg);
 }
 </script>
