@@ -31,7 +31,7 @@
 
 <div class="box">
     <div id="s-start">
-        <h2 id="t-title">Informatics Final Exam</h2>
+        <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ- 2026</h2>
         <p id="t-desc">Questions: 20 | Time: 30 min</p>
         <select id="lang" onchange="updateUI()"><option value="kz">Қазақ тілі</option><option value="ru">Русский язык</option></select>
         <input type="text" id="ln" placeholder="Тегі (Фамилия)"><input type="text" id="fn" placeholder="Аты (Имя)">
@@ -54,13 +54,13 @@
     <div id="s-res" class="hidden">
         <h3 id="r-n"></h3>
         <div class="res-card">
-            <div id="res-lbl-total" style="font-weight: bold; color: #7f8c8d;">ЖАЛПЫ БАЛЛ</div>
+            <div id="res-lbl-total" style="font-weight: bold; color: #7f8c8d;">ЖАЛПЫ БАЛЛ / ОБЩИЙ БАЛЛ</div>
             <div id="r-score-big">0</div>
             <div id="r-p" style="font-size: 24px; color: var(--p); font-weight: bold;">0%</div>
             <div class="res-row">
                 <div class="res-item"><span class="res-val" id="r-raw">0</span><span class="res-txt" id="res-lbl-test">Тест балы</span></div>
-                <div class="res-item" style="color: var(--d);"><span class="res-val" id="r-viol">0</span><span class="res-txt" id="res-lbl-viol">Бұзушылықтар</span></div>
-                <div class="res-item"><span class="res-val" id="r-pen">0</span><span class="res-txt" id="res-lbl-pen">Шегерілді</span></div>
+                <div class="res-item" style="color: var(--d);"><span class="res-val" id="r-viol">0</span><span class="res-txt" id="res-lbl-viol">Бұзушылықтар / Нарушения</span></div>
+                <div class="res-item"><span class="res-val" id="r-pen">0</span><span class="res-txt" id="res-lbl-pen">Шегерілді / Снято баллов</span></div>
             </div>
         </div>
         <p style="color: #d63031; font-weight: bold; margin-top: 15px;" id="txt-done-msg"></p>
@@ -69,8 +69,8 @@
 
 <div id="modal" class="modal-overlay hidden" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-        <h3 id="m-title">Аяқтауды растайсыз ба?</h3>
-        <button class="b-fin" onclick="finish()" style="width: 100%;" id="m-btn">ИӘ</button>
+        <h3 id="m-title">Тестті аяқтауды растайсыз ба? / Подверждаете завершение теста?</h3>
+        <button class="b-fin" onclick="finish()" style="width: 100%;" id="m-btn">ИӘ / ДА</button>
     </div>
 </div>
 
@@ -125,16 +125,16 @@ const db = {
 
 const ui = {
     kz: { 
-        title: "Informatics Final Exam", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", 
+        title: "ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ- 2026", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", 
         viol: "Бұзушылықтар", q_lbl: "Сұрақ", m_title: "Аяқтауды растайсыз ба?", m_btn: "ИӘ", total: "ЖАЛПЫ БАЛЛ", 
         t_score: "Тест балы", pen: "Шегерілді", done: "Тест аяқталды!",
-        v1: "ТЕРЕЗЕДЕН ШЫҚПАҢЫЗ!", v2: "НАЗАР АУДАРЫҢЫЗ!", v3: "БҰЗУШЫЛЫҚ! Балл шегерілді."
+        v1: "БАСҚА ТЕРЕЗЕГЕ АУЫСПАҢЫЗ!", v2: "НАЗАР АУДАРЫҢЫЗ 3-РЕТ БАСҚА ТЕРЕЗЕГЕ АУЫССАҢЫЗ БАЛЛ ШЕГЕРІЛЕДІ!", v3: "БҰЗУШЫЛЫҚ! Балл шегерілді."
     },
     ru: { 
-        title: "Informatics Final Exam", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", 
+        title: "Лучший учитель информатики - 2026", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", 
         viol: "Нарушения", q_lbl: "Вопрос", m_title: "Подтверждаете завершение?", m_btn: "ДА", total: "ИТОГОВЫЙ БАЛЛ", 
         t_score: "Балл теста", pen: "Снято баллов", done: "Тест завершен!",
-        v1: "НЕ ВЫХОДИТЕ ИЗ ОКНА!", v2: "ВНИМАНИЕ!", v3: "НАРУШЕНИЕ! Баллы сняты."
+        v1: "НЕ ВЫХОДИТЕ ИЗ ОКНА!", v2: "ВНИМАНИЕ! НЕ ВЫХОДИТЕ ИЗ ОКНА! СЛУДУЮЩИЙ РАЗ БУДУТ СНЯТЫ БАЛЛЫ", v3: "НАРУШЕНИЕ! Баллы сняты."
     }
 };
 
