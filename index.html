@@ -86,7 +86,12 @@
             <button id="n-btn" class="b-next" onclick="move(1)">Келесі</button>
             <button id="f-btn" class="b-fin hidden" onclick="openModal()">Аяқтау</button>
         </div>
-        <p id="v-msg"><span id="v-label">Бұзушылықтар</span>: <span id="v-c">0</span></p>
+        <p id="v-msg">
+            <span id="v-label">Бұзушылықтар</span>: <span id="v-c">0</span> 
+            <span id="pen-info" style="display:none; margin-left:15px; color:#e74c3c; padding: 2px 8px; border-left: 2px solid #ddd;">
+        ⚠️ <span id="pen-txt">Шегерілген балл</span>: <span id="pen-count" style="font-weight:900; font-size:1.2em;">0</span>
+            </span>
+        </p>
     </div>
 
     <div id="s-res" class="hidden">
@@ -292,10 +297,42 @@ function showResult(d) {
 }
 
 window.onblur = function() {
+    // Егер тест басталмаса, аяқталса немесе растау терезесі ашық болса - жұмыс істемейді
     if(!isStarted || isFinished || !document.getElementById('modal').classList.contains('hidden')) return;
-    viol++; document.getElementById('v-c').innerText = viol;
-    alert((viol === 1) ? ui[L].v1 : (viol === 2 ? ui[L].v2 : ui[L].v3));
-}
+    
+    viol++; // Бұзушылық санын арттыру
+    document.getElementById('v-c').innerText = viol;
+    
+    let msg = "";
+    const penalty = (viol >= 3) ? (viol - 2) : 0; // 3-ші реттен бастап есептеу
+
+    // Тілге байланысты хабарламалар
+    if (L === 'kz') {
+        if (viol === 1) {
+            msg = "⚠️ ЕСКЕРТУ (1/2): Басқа терезеге ауыспаңыз!";
+        } else if (viol === 2) {
+            msg = "🚫 ҚАТАҢ ЕСКЕРТУ (2/2): Келесі жолы балл алынады!";
+        } else {
+            msg = `❌ ЕРЕЖЕ БҰЗЫЛДЫ! Балл алынды. Жалпы шегерілген балл: ${penalty}`;
+        }
+    } else {
+        if (viol === 1) {
+            msg = "⚠️ ПРЕДУПРЕЖДЕНИЕ (1/2): Не выходите из окна!";
+        } else if (viol === 2) {
+            msg = "🚫 ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ (2/2): В следующий раз будет снят балл!";
+        } else {
+            msg = `❌ НАРУШЕНИЕ! Балл снят. Всего снято баллов: ${penalty}`;
+        }
+    }
+
+    // Экрандағы "Шегерілген балл" көрсеткішін жаңарту
+    if (penalty > 0) {
+        document.getElementById('pen-info').style.display = "inline";
+        document.getElementById('pen-count').innerText = penalty;
+    }
+
+    alert(msg);
+};
 
 window.onload = () => { updateUI(); };
 </script>
