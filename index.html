@@ -7,12 +7,8 @@
     <style>
         :root { --p: #2980b9; --s: #27ae60; --d: #e74c3c; --g: #f5f6fa; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--g); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; user-select: none; }
-        .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 650px; text-align: center; border-top: 6px solid var(--p); position: relative; }
+        .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 650px; text-align: center; border-top: 6px solid var(--p); }
         .hidden { display: none !important; }
-        
-        /* Қатысушы есіміне арналған стиль */
-        #user-tag { position: absolute; top: 15px; right: 20px; font-size: 14px; color: #7f8c8d; font-weight: bold; border-bottom: 2px solid #eee; padding-bottom: 3px; }
-        
         input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
         #timer { font-size: 26px; font-weight: bold; color: var(--d); border: 3px solid var(--d); padding: 10px 20px; border-radius: 12px; display: inline-block; margin-bottom: 20px; background: #fff; }
         .opt { display: block; text-align: left; padding: 15px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 17px; }
@@ -27,8 +23,6 @@
 <body oncontextmenu="return false;">
 
 <div class="box">
-    <div id="user-tag" class="hidden"></div>
-
     <div id="s-start">
         <h2 id="t-title">ИНФОРМАТИКА МҰҒАЛІМДЕРІНЕ АРНАЛҒАН ТЕСТ</h2>
         <div style="margin-bottom: 20px;">
@@ -68,6 +62,7 @@ const db = {
         {q:"Python-да тізім (list) қалай жазылады?", a:["[]","{}","()","<>"], c:0},
         {q:"HTML-дегі ең үлкен тақырып тегі?", a:["h6","h1","p","div"], c:1},
         {q:"Ең кіші ақпарат өлшем бірлігі?", a:["Байт","Килобайт","Бит","Мегабайт"], c:2},
+        // Осында қалған сұрақтарды қосыңыз...
     ],
     ru: [
         {q:"Как создается список (list) в Python?", a:["[]","{}","()","<>"], c:0},
@@ -77,14 +72,14 @@ const db = {
 };
 
 const ui = {
-    kz: { q:"Сұрақ", v:"Ереже бұзу", back:"Артқа", next:"Келесі", fin:"Аяқтау", start:"Бастау", confirm:"Тестті аяқтайсыз ба?", u_lbl:"Қатысушы",
-         v1: "ЕСКЕРТУ! Тест терезесінен шығуға болмайды!",
-         v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы терезеден шықсаңыз, балл шегеріледі!",
-         v3: (v, p) => `ЕРЕЖЕ БҰЗЫЛДЫ! \nТерезеден ауысу: ${v} \nАйыппұл: -${p} балл` },
-    ru: { q:"Вопрос", v:"Нарушения", back:"Назад", next:"Далее", fin:"Завершить", start:"Начать", confirm:"Завершить тест?", u_lbl:"Участник",
-         v1: "ВНИМАНИЕ! Не выходите из окна теста!",
-         v2: "ВНИМАНИЕ! В следующий раз будут сняты баллы!",
-         v3: (v, p) => `НАРУШЕНИЕ ПРАВИЛ! \nПереходов: ${v} \nСнято баллов: -${p}` }
+    kz: { q:"Сұрақ", v:"Ереже бұзу", back:"Артқа", next:"Келесі", fin:"Аяқтау", start:"Бастау", confirm:"Тестті аяқтайсыз ба?", 
+         v1: "ЕСКЕРТУ! Тест терезесінен шығуға болмайды! (1-ші ескерту)",
+         v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы терезеден шықсаңыз, балл шегеріледі! (2-ші ескерту)",
+         v3: (v, p) => `ЕРЕЖЕ БҰЗЫЛДЫ! \n\nТерезеден ауысу саны: ${v} \nШегерілген жалпы балл: ${p}` },
+    ru: { q:"Вопрос", v:"Нарушения", back:"Назад", next:"Далее", fin:"Завершить", start:"Начать", confirm:"Завершить тест?",
+         v1: "ВНИМАНИЕ! Не выходите из окна теста! (1-е предупреждение)",
+         v2: "ВНИМАНИЕ! В следующий раз будут сняты баллы! (2-е предупреждение)",
+         v3: (v, p) => `НАРУШЕНИЕ ПРАВИЛ! \n\nКол-во переходов: ${v} \nВсего снято баллов: ${p}` }
 };
 
 let L = 'kz';
@@ -104,29 +99,21 @@ window.onload = function() {
 
 function setL(lang) {
     L = lang; state.L = lang;
-    document.getElementById('btn-kz').style.opacity = L === 'kz' ? '1' : '0.5';
-    document.getElementById('btn-ru').style.opacity = L === 'ru' ? '1' : '0.5';
+    document.getElementById('btn-kz').style.background = L === 'kz' ? '#2980b9' : '#34495e';
+    document.getElementById('btn-ru').style.background = L === 'ru' ? '#2980b9' : '#34495e';
     document.getElementById('p-btn').innerText = ui[L].back;
     document.getElementById('n-btn').innerText = ui[L].next;
     document.getElementById('f-btn').innerText = ui[L].fin;
     document.getElementById('txt-q').innerText = ui[L].q;
     document.getElementById('txt-v').innerText = ui[L].v;
     document.getElementById('btn-go').innerText = ui[L].start;
-    updateUserTag();
-}
-
-function updateUserTag() {
-    if(state.isStarted && !state.isFinished) {
-        const tag = document.getElementById('user-tag');
-        tag.innerText = `${ui[L].u_lbl}: ${state.ln} ${state.fn}`;
-        tag.classList.remove('hidden');
-    }
 }
 
 function init() {
     const f = document.getElementById('fn').value.trim();
     const l = document.getElementById('ln').value.trim();
     if (!f || !l) return alert(L === 'kz' ? "Аты-жөніңізді жазыңыз!" : "Введите ФИО!");
+
     state.fn = f; state.ln = l; state.isStarted = true;
     state.qs = [...db[L]].sort(() => 0.5 - Math.random()).slice(0, 20);
     state.ans = new Array(20).fill(null);
@@ -137,7 +124,6 @@ function init() {
 function resume() {
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.remove('hidden');
-    updateUserTag();
     if (timer) clearInterval(timer);
     timer = setInterval(() => {
         if (!state.isFinished) { state.time--; updateT(); save(); if (state.time <= 0) finish(); }
@@ -165,16 +151,17 @@ function render() {
     document.getElementById('p-btn').disabled = state.cur === 0;
     document.getElementById('n-btn').classList.toggle('hidden', state.cur === 19);
     document.getElementById('f-btn').classList.toggle('hidden', state.cur < 19);
+    
     let p = (state.viol >= 3) ? (state.viol - 2) : 0;
     document.getElementById('v-count').innerText = `${state.viol} (Айыппұл: -${p})`;
 }
 
 function move(n) { state.cur += n; render(); save(); }
+
 function preFinish() { if (confirm(ui[L].confirm)) finish(); }
 
 function finish() {
     state.isFinished = true; state.isStarted = false;
-    document.getElementById('user-tag').classList.add('hidden');
     clearInterval(timer); save(); showResult();
 }
 
