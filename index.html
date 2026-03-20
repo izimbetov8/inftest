@@ -284,9 +284,55 @@ function openModal() { document.getElementById('modal').classList.remove('hidden
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 function finish() {
-    isFinished = true; isStarted = false;
-    clearInterval(timer); closeModal();
-    saveState(true); loadState();
+    isFinished = true; 
+    isStarted = false;
+    clearInterval(timer); 
+    closeModal();
+    
+    // Баллдарды есептеу
+    let r = 0; 
+    ans.forEach((a, i) => { if (a === qs[i].c) r++; });
+    let p = (viol >= 3) ? (viol - 2) : 0;
+    let finalScore = Math.max(0, r - p);
+    
+    // Жіберілетін деректер объектісі
+    const results = {
+        fn: document.getElementById('fn').value,
+        ln: document.getElementById('ln').value,
+        score: finalScore,
+        viol: viol,
+        L: L
+    };
+
+    // ГУГЛДАН АЛҒАН WEB APP URL-ДІ ОСЫ ЖЕРГЕ ҚОЙЫҢЫЗ:
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby3YEVSGYKr1YfHuaAywoIHGV60SGzzbrbPKj2kXADrsXRKgVczyTdLRZHinRkt0iJ9/exec';
+    
+    // Google Sheets-ке жіберу (FETCH API)
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors', 
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(results)
+    })
+    .then(() => {
+        console.log("Деректер жіберілді");
+        // Нәтижені экранға шығару
+        saveState(true); 
+        showResult({ 
+            fn: results.fn, 
+            ln: results.ln, 
+            r: r, 
+            p: p, 
+            viol: viol, 
+            L: L 
+        });
+    })
+    .catch(error => {
+        console.error('Қате:', error);
+        saveState(true);
+        loadState();
+    });
 }
 
 function showResult(d) {
