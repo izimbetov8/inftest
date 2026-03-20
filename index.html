@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ИНФОРМАТИКА МҰҒАЛІМІ - 2026</title>
+    <title>ИНФОРМАТИКА ТЕСТ - 2026</title>
     <style>
         :root { --p: #2980b9; --s: #27ae60; --d: #e74c3c; --g: #f5f6fa; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--g); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; user-select: none; }
         .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 650px; text-align: center; border-top: 6px solid var(--p); position: relative; }
         .hidden { display: none !important; }
         
-        /* Қатысушы есімі стильі */
-        #user-tag { position: absolute; top: 15px; right: 20px; font-size: 13px; color: #7f8c8d; font-weight: bold; background: #f1f2f6; padding: 5px 12px; border-radius: 20px; }
+        /* Қатысушы есіміне арналған стиль */
+        #user-tag { position: absolute; top: 15px; right: 20px; font-size: 14px; color: #7f8c8d; font-weight: bold; border-bottom: 2px solid #eee; padding-bottom: 3px; }
         
         input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
         #timer { font-size: 26px; font-weight: bold; color: var(--d); border: 3px solid var(--d); padding: 10px 20px; border-radius: 12px; display: inline-block; margin-bottom: 20px; background: #fff; }
@@ -32,18 +32,18 @@
     <div id="s-start">
         <h2 id="t-title">ИНФОРМАТИКА МҰҒАЛІМДЕРІНЕ АРНАЛҒАН ТЕСТ</h2>
         <div style="margin-bottom: 20px;">
-            <button onclick="setL('kz')" id="btn-kz" style="background:var(--p); width:110px;">Қазақша</button>
-            <button onclick="setL('ru')" id="btn-ru" style="background:#34495e; width:110px;">Русский</button>
+            <button onclick="setL('kz')" id="btn-kz" style="background:var(--p); width:100px;">Қазақша</button>
+            <button onclick="setL('ru')" id="btn-ru" style="background:#34495e; width:100px;">Русский</button>
         </div>
         <input type="text" id="ln" placeholder="Тегі / Фамилия">
         <input type="text" id="fn" placeholder="Аты / Имя">
-        <button class="b-next" onclick="init()" style="width: 100%; margin-top: 10px;" id="btn-go">Тестті бастау / Начать тест</button>
+        <button class="b-next" onclick="init()" style="width: 100%; margin-top: 10px;" id="btn-go">Бастау / Начать</button>
     </div>
 
     <div id="s-test" class="hidden">
         <div id="timer">30:00</div>
         <div style="color: #7f8c8d; margin-bottom: 10px;"><span id="txt-q">Сұрақ</span>: <span id="q-num">1</span> / 20</div>
-        <h3 id="q-text" style="min-height: 50px; margin-bottom: 20px;"></h3>
+        <h3 id="q-text" style="min-height: 50px;"></h3>
         <div id="options"></div>
         <div class="btns">
             <button id="p-btn" class="b-prev" onclick="move(-1)">Артқа</button>
@@ -55,29 +55,24 @@
 
     <div id="s-res" class="hidden">
         <h2 id="r-name"></h2>
-        <div style="font-size: 75px; font-weight: bold; color: var(--s); margin: 10px 0;" id="r-score">0</div>
-        <div id="r-info" style="font-size: 19px; line-height: 1.8; text-align: center;"></div>
+        <div style="font-size: 70px; font-weight: bold; color: var(--s); margin: 10px 0;" id="r-score">0</div>
+        <div id="r-info" style="font-size: 18px; line-height: 1.6; text-align: left; display: inline-block;"></div>
         <br>
-        <button class="b-next" onclick="restart()" style="margin-top: 25px; max-width: 250px;">Қайта бастау / Сброс</button>
+        <button class="b-next" onclick="restart()" style="margin-top: 20px; max-width: 200px;">Қайта бастау</button>
     </div>
 </div>
 
 <script>
 const db = {
     kz: [
-        {q:"Python-да тізім (list) қандай жақшамен жазылады?", a:["[]","{}","()","<>"], c:0},
-        {q:"HTML-де ең үлкен тақырып тегі қайсы?", a:["h6","h1","p","div"], c:1},
+        {q:"Python-да тізім (list) қалай жазылады?", a:["[]","{}","()","<>"], c:0},
+        {q:"HTML-дегі ең үлкен тақырып тегі?", a:["h6","h1","p","div"], c:1},
         {q:"Ең кіші ақпарат өлшем бірлігі?", a:["Байт","Килобайт","Бит","Мегабайт"], c:2},
-        {q:"Операциялық жүйені көрсетіңіз:", a:["Google","Windows","Python","Word"], c:1},
-        {q:"Пернетақтадағы 'Enter' батырмасының қызметі?", a:["Өшіру","Енгізу","Бос орын","Бас әріп"], c:1}
-        // Осында қалған 45 сұрақты қосыңыз...
     ],
     ru: [
-        {q:"Какими скобками создается список в Python?", a:["[]","{}","()","<>"], c:0},
+        {q:"Как создается список (list) в Python?", a:["[]","{}","()","<>"], c:0},
         {q:"Какой тег HTML для самого большого заголовка?", a:["h6","h1","p","div"], c:1},
         {q:"Минимальная единица информации?", a:["Байт","Килобайт","Бит","Мегабайт"], c:2},
-        {q:"Укажите операционную систему:", a:["Google","Windows","Python","Word"], c:1},
-        {q:"Функция клавиши 'Enter'?", a:["Удаление","Ввод","Пробел","Заглавная"], c:1}
     ]
 };
 
@@ -85,41 +80,38 @@ const ui = {
     kz: { q:"Сұрақ", v:"Ереже бұзу", back:"Артқа", next:"Келесі", fin:"Аяқтау", start:"Бастау", confirm:"Тестті аяқтайсыз ба?", u_lbl:"Қатысушы",
          v1: "ЕСКЕРТУ! Тест терезесінен шығуға болмайды!",
          v2: "НАЗАР АУДАРЫҢЫЗ! Келесі жолы терезеден шықсаңыз, балл шегеріледі!",
-         v3: (v, p) => `ЕРЕЖЕ БҰЗЫЛДЫ! \nТерезеден ауысу саны: ${v} \nШегерілген жалпы балл: ${p}` },
+         v3: (v, p) => `ЕРЕЖЕ БҰЗЫЛДЫ! \nТерезеден ауысу: ${v} \nАйыппұл: -${p} балл` },
     ru: { q:"Вопрос", v:"Нарушения", back:"Назад", next:"Далее", fin:"Завершить", start:"Начать", confirm:"Завершить тест?", u_lbl:"Участник",
          v1: "ВНИМАНИЕ! Не выходите из окна теста!",
          v2: "ВНИМАНИЕ! В следующий раз будут сняты баллы!",
-         v3: (v, p) => `НАРУШЕНИЕ ПРАВИЛ! \nКол-во переходов: ${v} \nВсего снято баллов: ${p}` }
+         v3: (v, p) => `НАРУШЕНИЕ ПРАВИЛ! \nПереходов: ${v} \nСнято баллов: -${p}` }
 };
 
 let L = 'kz';
-let state = { isStarted: false, isFinished: false, fn: "", ln: "", qs: [], ans: [], cur: 0, time: 1800, viol: 0, L: 'kz' };
+let state = { isStarted: false, isFinished: false, fn: "", ln: "", qs: [], ans: [], cur: 0, time: 1800, viol: 0 };
 let timer;
 
-// БЕТ ЖҮКТЕЛГЕНДЕ ДЕРЕКТЕРДІ ҚАЛПЫНА КЕЛТІРУ
 window.onload = function() {
-    const saved = localStorage.getItem('it_teacher_quiz_2026');
+    const saved = localStorage.getItem('inf_quiz_2026');
     if (saved) {
         state = JSON.parse(saved);
         L = state.L || 'kz';
         setL(L);
         if (state.isFinished) showResult();
         else if (state.isStarted) resume();
-    } else {
-        setL('kz');
     }
 };
 
 function setL(lang) {
     L = lang; state.L = lang;
-    document.getElementById('btn-kz').style.opacity = L === 'kz' ? '1' : '0.4';
-    document.getElementById('btn-ru').style.opacity = L === 'ru' ? '1' : '0.4';
+    document.getElementById('btn-kz').style.opacity = L === 'kz' ? '1' : '0.5';
+    document.getElementById('btn-ru').style.opacity = L === 'ru' ? '1' : '0.5';
     document.getElementById('p-btn').innerText = ui[L].back;
     document.getElementById('n-btn').innerText = ui[L].next;
     document.getElementById('f-btn').innerText = ui[L].fin;
     document.getElementById('txt-q').innerText = ui[L].q;
     document.getElementById('txt-v').innerText = ui[L].v;
-    document.getElementById('btn-go').innerText = L === 'kz' ? "Тестті бастау" : "Начать тест";
+    document.getElementById('btn-go').innerText = ui[L].start;
     updateUserTag();
 }
 
@@ -135,7 +127,6 @@ function init() {
     const f = document.getElementById('fn').value.trim();
     const l = document.getElementById('ln').value.trim();
     if (!f || !l) return alert(L === 'kz' ? "Аты-жөніңізді жазыңыз!" : "Введите ФИО!");
-    
     state.fn = f; state.ln = l; state.isStarted = true;
     state.qs = [...db[L]].sort(() => 0.5 - Math.random()).slice(0, 20);
     state.ans = new Array(20).fill(null);
@@ -149,12 +140,7 @@ function resume() {
     updateUserTag();
     if (timer) clearInterval(timer);
     timer = setInterval(() => {
-        if (!state.isFinished) { 
-            state.time--; 
-            updateT(); 
-            save(); 
-            if (state.time <= 0) finish(); 
-        }
+        if (!state.isFinished) { state.time--; updateT(); save(); if (state.time <= 0) finish(); }
     }, 1000);
     render();
 }
@@ -179,7 +165,6 @@ function render() {
     document.getElementById('p-btn').disabled = state.cur === 0;
     document.getElementById('n-btn').classList.toggle('hidden', state.cur === 19);
     document.getElementById('f-btn').classList.toggle('hidden', state.cur < 19);
-    
     let p = (state.viol >= 3) ? (state.viol - 2) : 0;
     document.getElementById('v-count').innerText = `${state.viol} (Айыппұл: -${p})`;
 }
@@ -197,28 +182,25 @@ function showResult() {
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.add('hidden');
     document.getElementById('s-res').classList.remove('hidden');
-    
     let r = 0; state.ans.forEach((a, i) => { if (a === state.qs[i].c) r++; });
     let p = (state.viol >= 3) ? (state.viol - 2) : 0;
     let final = Math.max(0, r - p);
-    
     document.getElementById('r-name').innerText = state.ln + " " + state.fn;
     document.getElementById('r-score').innerText = final;
     document.getElementById('r-info').innerHTML = L === 'kz' ? 
-        `Дұрыс жауаптар: <b>${r}</b> <br> Ереже бұзу саны: <b>${state.viol}</b> <br> Шегерілген балл: <b>${p}</b>` :
-        `Верных ответов: <b>${r}</b> <br> Нарушений: <b>${state.viol}</b> <br> Снято баллов: <b>${p}</b>`;
+        `Тест балы: ${r} <br> Ереже бұзу: ${state.viol} <br> Шегерілді: ${p}` :
+        `Балл теста: ${r} <br> Нарушений: ${state.viol} <br> Снято баллов: ${p}`;
 }
 
-function save() { localStorage.setItem('it_teacher_quiz_2026', JSON.stringify(state)); }
+function save() { localStorage.setItem('inf_quiz_2026', JSON.stringify(state)); }
 
 function restart() {
-    if (confirm(L === 'kz' ? "Нәтижені өшіріп, қайта бастайсыз ба?" : "Сбросить результат и начать заново?")) {
-        localStorage.removeItem('it_teacher_quiz_2026');
+    if (confirm(L === 'kz' ? "Қайта бастау?" : "Начать заново?")) {
+        localStorage.removeItem('inf_quiz_2026');
         location.reload();
     }
 }
 
-// ЕРЕЖЕ БҰЗУДЫ БАҚЫЛАУ
 window.onblur = function() {
     if (!state.isStarted || state.isFinished) return;
     state.viol++; save(); render();
