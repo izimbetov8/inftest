@@ -320,26 +320,46 @@ function finish() {
     
     if (modalBtn.disabled) return;
     
-    // Блокировка қайта басудан қорғау
+    // 1. Батырмаларды бірден блоктау және күйін өзгерту
     modalBtn.disabled = true;
-    modalBtn.innerText = "...";
-    finishBtn.disabled = true;
+    modalBtn.innerText = ui[L].fin_done || "АЯҚТАЛДЫ"; // Мәтінді бірден ауыстыру
+    if(finishBtn) {
+        finishBtn.disabled = true;
+        finishBtn.innerText = ui[L].fin_done || "АЯҚТАЛДЫ";
+    }
 
-    isFinished = true; isStarted = false; 
+    isFinished = true; 
+    isStarted = false; 
     clearInterval(timer); 
-    closeModal();
 
+    // 2. Нәтижені есептеу
     let r = 0; ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
     let p = (viol >= 3) ? (viol - 2) : 0;
-    const res = { L, ln: document.getElementById('ln').value, fn: document.getElementById('fn').value, raw: r, viol, pen: p, score: Math.max(0, r-p) };
+    const res = { 
+        L, 
+        ln: document.getElementById('ln').value, 
+        fn: document.getElementById('fn').value, 
+        raw: r, 
+        viol, 
+        pen: p, 
+        score: Math.max(0, r-p) 
+    };
     
+    // 3. Локалды сақтау
     localStorage.removeItem('quiz_progress');
     localStorage.setItem('quiz_result', JSON.stringify(res));
 
-    // Деректерді жіберу
+    // 4. МЫНАУ МАҢЫЗДЫ: Модальды бірден жауып, нәтижені бірден көрсету
+    closeModal();
+    showResult(res); // Бұл функция енді кідіріссіз шақырылады
+
+    // 5. Деректерді "фонда" (артында) жіберу
+    // Бұл пайдаланушының экранына әсер етпейді
     fetch('https://script.google.com/macros/s/AKfycbx1XKGUnCtvWlsQgjaRYPwu5DJ0tG6wJv6LsWgVMNIufeVCUfg9t_VK-ofgcqinvhvA/exec', {
-        method: 'POST', mode: 'no-cors', body: JSON.stringify(res)
-    }).then(() => showResult(res)).catch(() => showResult(res));
+        method: 'POST', 
+        mode: 'no-cors', 
+        body: JSON.stringify(res)
+    }).catch(err => console.log("Дерек жіберу қатесі:", err));
 }
 
 function showResult(d) {
