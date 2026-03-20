@@ -291,21 +291,22 @@ function finish() {
     
     // Есептеулер
     let r = 0; 
-    ans.forEach((a, i) => { if (a === qs[i].c) r++; }); // Тесттен жинаған таза балы
-    let p = (viol >= 3) ? (viol - 2) : 0;              // Шегерілетін балл (айыппұл)
-    let final = Math.max(0, r - p);                    // Қорытынды балл
+    ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
+    let p = (viol >= 3) ? (viol - 2) : 0;              
+    let final = Math.max(0, r - p);                    
     
+    // Деректерді объект ретінде жинау
     const results = {
-        fn: document.getElementById('fn').value,
-        ln: document.getElementById('ln').value,
-        raw: r,      // Тест балы
-        pen: p,      // Шегерілген балл
-        score: final, // Қорытынды балл
-        viol: viol,
-        L: L
+        L: L,                               // language
+        ln: document.getElementById('ln').value, // lastName
+        fn: document.getElementById('fn').value, // firstName
+        raw: r,                             // RawScore
+        viol: viol,                         // violations
+        pen: p,                             // Penalty
+        score: final                        // FinalScore
     };
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyfxPZkwFTSXcrjtPrqelTcwYHg7l-0dt5tHihHumT6OY4kpkXZhdvIaD3kleUAuFlb/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx1XKGUnCtvWlsQgjaRYPwu5DJ0tG6wJv6LsWgVMNIufeVCUfg9t_VK-ofgcqinvhvA/exec';
     
     fetch(scriptURL, {
         method: 'POST',
