@@ -334,39 +334,38 @@ function openModal() { document.getElementById('modal').classList.remove('hidden
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 function finish() {
-    // 1. Егер тест әлдеқашан аяқталса, функцияны тоқтату (қайталап басудан қорғау)
-    if(state.finished) return; 
+    if(state.finished) return; // Қайталап басудан сақтау
 
-    // 2. Тест күйін өзгерту
     state.finished = true; 
     state.active = false;
-    clearInterval(timer); // Таймерді тоқтату
-    save(); // LocalStorage-ға сақтау
+    clearInterval(timer); 
+    save(); 
 
-    // 3. Модаль ішіндегі "ИӘ" батырмасын өзгерту (ID: confirm-finish-btn)
+    // 1. Модаль ішіндегі "ИӘ" батырмасын өзгерту
     const confBtn = document.getElementById('confirm-finish-btn');
     if(confBtn) {
-        confBtn.innerText = ui[state.L].fin_done; // "АЯҚТАЛДЫ" немесе "ЗАВЕРШЕНО"
-        confBtn.disabled = true; // Батырманы белсенді емес ету
-        confBtn.style.background = "#bdc3c7"; // Түсін сұрғылт ету (визуалды эффект)
+        confBtn.innerText = ui[state.L].fin_done; // "АЯҚТАЛДЫ"
+        confBtn.disabled = true; // Батырманы өшіру
+        confBtn.style.opacity = "0.7";
+        confBtn.style.cursor = "default";
     }
-    
-    // 4. Тест бетіндегі (астындағы) негізгі "Аяқтау" батырмасын өзгерту (ID: f-btn)
+
+    // 2. Астындағы негізгі "Аяқтау" батырмасын өзгерту
     const mainFinBtn = document.getElementById('f-btn');
     if(mainFinBtn) {
-        mainFinBtn.innerText = ui[state.L].fin_done;
+        mainFinBtn.innerText = ui[state.L].fin_done; // "АЯҚТАЛДЫ"
         mainFinBtn.disabled = true;
     }
 
-    // 5. "Болдырмау" батырмасын жасырып тастау
+    // 3. "Болдырмау" батырмасын жасыру
     const cancelBtn = document.getElementById('cancel-btn');
-    if(cancelBtn) cancelBtn.classList.add('hidden');
+    if(cancelBtn) cancelBtn.style.display = 'none';
 
-    // 6. 0.6 секундтан кейін нәтиже бетін көрсету
+    // 4. Нәтижені аз ғана кідіріспен көрсету (пайдаланушы өзгерісті көруі үшін)
     setTimeout(() => {
-        closeModal(); // Модальды жабу
-        showResult(); // Нәтижелерді шығару
-    }, 600);
+        closeModal();
+        showResult();
+    }, 800);
 }
 
 function showResult(d) {
