@@ -255,6 +255,38 @@ function closeInst() {
     document.getElementById('btn-start').style.display = "block";
 }
 
+// ПАРАҚШАНЫ ЖАҢАРТҚАНДА ДЕРЕКТЕРДІ САҚТАУ
+function saveProgress() {
+    if (isStarted && !isFinished) {
+        const data = {
+            qs, cur, ans, time, viol, L,
+            fn: document.getElementById('fn').value,
+            ln: document.getElementById('ln').value
+        };
+        localStorage.setItem('quiz_progress', JSON.stringify(data));
+    }
+}
+
+function loadProgress() {
+    const result = localStorage.getItem('quiz_result');
+    if (result) {
+        showResult(JSON.parse(result));
+        return;
+    }
+
+    const saved = localStorage.getItem('quiz_progress');
+    if (saved) {
+        const d = JSON.parse(saved);
+        qs = d.qs; cur = d.cur; ans = d.ans; time = d.time; viol = d.viol; L = d.L;
+        document.getElementById('fn').value = d.fn;
+        document.getElementById('ln').value = d.ln;
+        setLanguage(L);
+        start(true);
+    } else {
+        updateUI();
+    }
+}
+
 function start(resume = false) {
     if(!resume) {
         let f=document.getElementById('fn').value.trim(), l=document.getElementById('ln').value.trim();
@@ -265,7 +297,16 @@ function start(resume = false) {
     isStarted = true;
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.remove('hidden');
-    timer = setInterval(() => { if(!isFinished) { time--; updateT(); if(time<=0) finish(); } }, 1000);
+    
+    if(timer) clearInterval(timer);
+    timer = setInterval(() => { 
+        if(!isFinished) { 
+            time--; 
+            updateT(); 
+            saveProgress(); 
+            if(time<=0) finish(); 
+        } 
+    }, 1000);
     render();
 }
 
@@ -280,7 +321,7 @@ function render() {
     let b = document.getElementById('opts'); b.innerHTML='';
     qs[cur].a.forEach((o,i)=>{
         let d=document.createElement('div'); d.className='opt'+(ans[cur]===i?' sel':'');
-        d.innerText=o; d.onclick=()=>{ans[cur]=i; render();}; b.appendChild(d);
+        d.innerText=o; d.onclick=()=>{ans[cur]=i; render(); saveProgress();}; b.appendChild(d);
     });
     document.getElementById('p-btn').disabled = (cur===0);
     document.getElementById('n-btn').classList.toggle('hidden', cur===19);
@@ -288,7 +329,7 @@ function render() {
     document.getElementById('v-c').innerText = viol;
 }
 
-function move(n) { cur+=n; render(); }
+function move(n) { cur+=n; render(); saveProgress(); }
 function openModal() { document.getElementById('modal').classList.remove('hidden'); }
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
@@ -297,12 +338,18 @@ function finish() {
     let r = 0; ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
     let p = (viol >= 3) ? (viol - 2) : 0;
     const res = { L, ln: document.getElementById('ln').value, fn: document.getElementById('fn').value, raw: r, viol, pen: p, score: Math.max(0, r-p) };
+    
+    localStorage.removeItem('quiz_progress');
+    localStorage.setItem('quiz_result', JSON.stringify(res));
+
     fetch('https://script.google.com/macros/s/AKfycbx1XKGUnCtvWlsQgjaRYPwu5DJ0tG6wJv6LsWgVMNIufeVCUfg9t_VK-ofgcqinvhvA/exec', {
         method: 'POST', mode: 'no-cors', body: JSON.stringify(res)
     }).then(() => showResult(res));
 }
 
 function showResult(d) {
+    L = d.L; updateUI();
+    document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.add('hidden');
     document.getElementById('s-res').classList.remove('hidden');
     document.getElementById('r-n').innerText = d.ln + " " + d.fn;
@@ -314,11 +361,12 @@ function showResult(d) {
 }
 
 window.onblur = function() {
-    if(!isStarted || isFinished) return;
-    viol++; document.getElementById('v-c').innerText = viol;
+    if(!isStarted || isFinished || !document.getElementById('modal').classList.contains('hidden')) return;
+    viol++; document.getElementById('v-c').innerText = viol; saveProgress();
     alert((viol === 1) ? ui[L].v1 : (viol === 2 ? ui[L].v2 : ui[L].v3));
 }
-window.onload = updateUI;
+
+window.onload = loadProgress;
 </script>
 </body>
 </html>
