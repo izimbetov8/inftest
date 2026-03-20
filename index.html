@@ -3,172 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ИНФОРМАТИКА МҰҒАЛІМІ - 2026</title>
+    <title>Информатика Тест - 2026</title>
     <style>
         :root { --p: #2980b9; --s: #27ae60; --d: #e74c3c; --g: #f5f6fa; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--g); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; user-select: none; }
-        .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 650px; text-align: center; border-top: 6px solid var(--p); }
+        .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 600px; text-align: center; border-top: 6px solid var(--p); }
         .hidden { display: none !important; }
-        input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        #timer { font-size: 26px; font-weight: bold; color: var(--d); border: 3px solid var(--d); padding: 10px 20px; border-radius: 12px; display: inline-block; margin-bottom: 20px; background: #fff; }
-        .opt { display: block; text-align: left; padding: 15px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 17px; }
-        .opt:hover { border-color: var(--p); background: #f0f7ff; }
-        .sel { border-color: var(--p); background: #e1f0ff; font-weight: bold; }
-        .btns { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px; }
-        button { flex: 1; padding: 16px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
-        .b-next { background: var(--p); } .b-prev { background: #95a5a6; } .b-fin { background: var(--s); }
-        #v-msg { color: var(--d); font-weight: bold; margin-top: 15px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        #timer { font-size: 24px; font-weight: bold; color: var(--d); margin-bottom: 20px; padding: 10px; border: 2px solid var(--d); border-radius: 10px; display: inline-block; }
+        .opt { display: block; text-align: left; padding: 15px; margin: 10px 0; border: 2px solid #eee; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        .opt:hover { background: #f0f7ff; border-color: var(--p); }
+        .sel { background: #e1f0ff; border-color: var(--p); font-weight: bold; }
+        .btns { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; }
+        .b-next { background: var(--p); }
+        .b-prev { background: #95a5a6; }
+        .b-fin { background: var(--s); }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="box">
     <div id="s-start">
-        <h2 id="t-title">ИНФОРМАТИКА ПӘНІ МҰҒАЛІМДЕРІНЕ АРНАЛҒАН ТЕСТ</h2>
-        <div style="margin-bottom: 20px;">
-            <button onclick="changeL('kz')" id="l-kz" style="background:var(--p); width:80px; margin-right:5px;">KZ</button>
-            <button onclick="changeL('ru')" id="l-ru" style="background:#34495e; width:80px;">RU</button>
-        </div>
-        <input type="text" id="ln" placeholder="Тегі / Фамилия">
-        <input type="text" id="fn" placeholder="Аты / Имя">
-        <button class="b-next" onclick="initTest()" style="width: 100%; margin-top: 10px;">Тестті бастау / Начать тест</button>
+        <h2>ИНФОРМАТИКА ТЕСТІ</h2>
+        <p>Аты-жөніңізді енгізіп, тестті бастаңыз</p>
+        <input type="text" id="ln" placeholder="Тегі">
+        <input type="text" id="fn" placeholder="Аты">
+        <button class="b-next" onclick="startTest()" style="width: 100%;">Бастау</button>
     </div>
 
     <div id="s-test" class="hidden">
         <div id="timer">30:00</div>
-        <div style="color: #7f8c8d; margin-bottom: 10px;">Сұрақ: <span id="q-num">1</span> / 20</div>
-        <h3 id="q-text" style="min-height: 50px;"></h3>
+        <div id="q-info" style="margin-bottom: 10px; color: #667;">Сұрақ: <span id="cur-q">1</span> / 20</div>
+        <h3 id="q-text"></h3>
         <div id="options"></div>
         <div class="btns">
-            <button id="p-btn" class="b-prev" onclick="move(-1)">Артқа</button>
-            <button id="n-btn" class="b-next" onclick="move(1)">Келесі</button>
-            <button id="f-btn" class="b-fin hidden" onclick="confirmFinish()">Аяқтау</button>
+            <button id="btn-p" class="b-prev" onclick="changeQ(-1)">Артқа</button>
+            <button id="btn-n" class="b-next" onclick="changeQ(1)">Келесі</button>
+            <button id="btn-f" class="b-fin hidden" onclick="finishTest()">Аяқтау</button>
         </div>
-        <p id="v-msg">Ереже бұзу: <span id="v-count">0</span></p>
     </div>
 
     <div id="s-res" class="hidden">
-        <h2 id="r-name"></h2>
-        <div style="font-size: 70px; font-weight: bold; color: var(--s); margin: 20px 0;" id="r-score">0</div>
-        <div id="r-info" style="font-size: 18px; line-height: 1.6;"></div>
-        <button class="b-next" onclick="restart()" style="margin-top: 30px;">Қайта бастау</button>
+        <h2 id="res-name"></h2>
+        <div style="font-size: 50px; font-weight: bold; color: var(--s);" id="res-score">0 / 20</div>
+        <p id="res-detail"></p>
+        <button class="b-next" onclick="resetAll()">Қайта бастау</button>
     </div>
 </div>
 
 <script>
-// Сұрақтар қоры (үлгі)
-const db = {
-    kz: [
-        {q:"Python-да тізім қалай жазылады?", a:["[]","{}","()","<>"], c:0},
-        {q:"HTML-дегі ең үлкен тақырып?", a:["h6","h1","p","div"], c:1},
-        {q:"Ақпараттың ең кіші бірлігі?", a:["Байт","Килобайт","Бит","Мегабайт"], c:2},
-        // Қалған 47 сұрақты осында қосасыз...
-    ],
-    ru: [
-        {q:"Как создается список в Python?", a:["[]","{}","()","<>"], c:0},
-        {q:"Самый большой заголовок в HTML?", a:["h6","h1","p","div"], c:1},
-        {q:"Минимальная единица информации?", a:["Байт","Килобайт","Бит","Мегабайт"], c:2},
-    ]
+// Тест сұрақтары (үлгі ретінде 5 сұрақ, сіз бұрынғы 50 сұрақты осында қоссаңыз болады)
+const questionsData = [
+    {q: "Python-да экранға шығару функциясы?", a: ["print()", "input()", "out()", "write()"], c: 0},
+    {q: "Ең кіші ақпарат өлшем бірлігі?", a: ["Байт", "Кбайт", "Бит", "Мбайт"], c: 2},
+    {q: "HTML-де тақырып тегі?", a: ["<p>", "<h1>", "<a>", "<div>"], c: 1},
+    {q: "Процессордың негізгі сипаттамасы?", a: ["Салмағы", "Жиілігі", "Түсі", "Көлемі"], c: 1},
+    {q: "Екілік жүйедегі сандар?", a: ["1,2", "0,1", "A,B", "0-9"], c: 1}
+];
+
+let state = {
+    isStarted: false,
+    isFinished: false,
+    fn: "", ln: "",
+    qs: [], // Араластырылған сұрақтар
+    ans: [], // Пайдаланушы жауаптары
+    cur: 0,
+    time: 1800,
+    viol: 0
 };
 
-let L = 'kz';
-let state = { isStarted: false, isFinished: false, fn: "", ln: "", qs: [], ans: [], cur: 0, time: 1800, viol: 0 };
-let timer;
+let timerInterval;
 
-// *** НЕГІЗГІ ФУНКЦИЯ: БЕТ ЖҮКТЕЛГЕНДЕ ТЕКСЕРУ ***
-window.onload = function() {
-    const saved = localStorage.getItem('inf_quiz_save');
+// ЖАДҚА САҚТАУ
+function saveToStorage() {
+    localStorage.setItem('quiz_state_2026', JSON.stringify(state));
+}
+
+// ЖАДТАН ЖҮКТЕУ
+function loadFromStorage() {
+    const saved = localStorage.getItem('quiz_state_2026');
     if (saved) {
         state = JSON.parse(saved);
         if (state.isFinished) {
             showResult();
         } else if (state.isStarted) {
-            startTest(true); // Тестті жалғастыру
+            resumeTest();
         }
     }
-};
-
-function changeL(lang) {
-    L = lang;
-    document.getElementById('l-kz').style.opacity = lang === 'kz' ? '1' : '0.5';
-    document.getElementById('l-ru').style.opacity = lang === 'ru' ? '1' : '0.5';
 }
 
-function initTest() {
-    const f = document.getElementById('fn').value.trim();
-    const l = document.getElementById('ln').value.trim();
-    if (!f || !l) return alert("Аты-жөніңізді жазыңыз!");
+function startTest() {
+    const fn = document.getElementById('fn').value.trim();
+    const ln = document.getElementById('ln').value.trim();
+    if (!fn || !ln) return alert("Аты-жөніңізді толық жазыңыз!");
 
-    state.fn = f; state.ln = l;
+    state.fn = fn; state.ln = ln;
     state.isStarted = true;
-    state.qs = [...(db[L] || db['kz'])].sort(() => 0.5 - Math.random()).slice(0, 20);
+    state.qs = [...questionsData].sort(() => 0.5 - Math.random()).slice(0, 20);
     state.ans = new Array(20).fill(null);
-    state.time = 1800;
     
-    save();
-    startTest();
+    resumeTest();
 }
 
-function startTest(isResume = false) {
+function resumeTest() {
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.remove('hidden');
     
-    if (timer) clearInterval(timer);
-    timer = setInterval(() => {
-        if (!state.isFinished) {
-            state.time--;
-            updateTimer();
-            save(); // Әр секунд сайын сақтау
-            if (state.time <= 0) finish();
-        }
-    }, 1000);
-    
-    render();
+    startTimer();
+    renderQuestion();
 }
 
-function updateTimer() {
+function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        state.time--;
+        updateTimerDisplay();
+        saveToStorage();
+        if (state.time <= 0) finishTest();
+    }, 1000);
+}
+
+function updateTimerDisplay() {
     let m = Math.floor(state.time / 60);
     let s = state.time % 60;
     document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
 }
 
-function render() {
-    const q = state.qs[state.cur];
-    document.getElementById('q-num').innerText = state.cur + 1;
-    document.getElementById('q-text').innerText = q.q;
+function renderQuestion() {
+    const qObj = state.qs[state.cur];
+    document.getElementById('cur-q').innerText = state.cur + 1;
+    document.getElementById('q-text').innerText = qObj.q;
     
-    const container = document.getElementById('options');
-    container.innerHTML = '';
+    const optDiv = document.getElementById('options');
+    optDiv.innerHTML = '';
     
-    q.a.forEach((opt, i) => {
+    qObj.a.forEach((opt, index) => {
         const div = document.createElement('div');
-        div.className = 'opt' + (state.ans[state.cur] === i ? ' sel' : '');
+        div.className = 'opt' + (state.ans[state.cur] === index ? ' sel' : '');
         div.innerText = opt;
-        div.onclick = () => { 
-            state.ans[state.cur] = i; 
-            render(); 
-            save(); 
+        div.onclick = () => {
+            state.ans[state.cur] = index;
+            renderQuestion();
+            saveToStorage();
         };
-        container.appendChild(div);
+        optDiv.appendChild(div);
     });
 
-    document.getElementById('p-btn').disabled = state.cur === 0;
-    document.getElementById('n-btn').classList.toggle('hidden', state.cur === 19);
-    document.getElementById('f-btn').classList.toggle('hidden', state.cur < 19);
-    document.getElementById('v-count').innerText = state.viol;
+    document.getElementById('btn-p').disabled = state.cur === 0;
+    document.getElementById('btn-n').classList.toggle('hidden', state.cur === 19);
+    document.getElementById('btn-f').classList.toggle('hidden', state.cur < 19);
 }
 
-function move(n) { state.cur += n; render(); save(); }
-
-function confirmFinish() {
-    if (confirm("Тестті аяқтауды растайсыз ба?")) finish();
+function changeQ(dir) {
+    state.cur += dir;
+    renderQuestion();
+    saveToStorage();
 }
 
-function finish() {
+function finishTest() {
     state.isFinished = true;
     state.isStarted = false;
-    clearInterval(timer);
-    save();
+    clearInterval(timerInterval);
+    saveToStorage();
     showResult();
 }
 
@@ -178,40 +175,33 @@ function showResult() {
     document.getElementById('s-res').classList.remove('hidden');
     
     let correct = 0;
-    state.ans.forEach((a, i) => { if (a === state.qs[i].c) correct++; });
-    
-    let penalty = (state.viol >= 3) ? (state.viol - 2) : 0;
-    let finalScore = Math.max(0, correct - penalty);
+    state.ans.forEach((a, i) => {
+        if (a === state.qs[i].c) correct++;
+    });
 
-    document.getElementById('r-name').innerText = state.ln + " " + state.fn;
-    document.getElementById('r-score').innerText = finalScore;
-    document.getElementById('r-info').innerHTML = `
-        Тест балы: ${correct} <br>
-        Ереже бұзу: ${state.viol} <br>
-        Шегерілген балл: ${penalty}
-    `;
+    document.getElementById('res-name').innerText = `${state.ln} ${state.fn}`;
+    document.getElementById('res-score').innerText = `${correct} / 20`;
+    document.getElementById('res-detail').innerText = `Қателіктер (терезеден шығу): ${state.viol}`;
 }
 
-function save() {
-    localStorage.setItem('inf_quiz_save', JSON.stringify(state));
-}
-
-function restart() {
-    if (confirm("Нәтижені өшіріп, қайта бастайсыз ба?")) {
-        localStorage.removeItem('inf_quiz_save');
+function resetAll() {
+    if (confirm("Барлық деректерді өшіріп, қайта бастайсыз ба?")) {
+        localStorage.removeItem('quiz_state_2026');
         location.reload();
     }
 }
 
-// Терезеден ауысқанды бақылау
+// Терезеден шыққанды бақылау
 window.onblur = function() {
     if (state.isStarted && !state.isFinished) {
         state.viol++;
-        save();
-        render();
-        alert("НАЗАР АУДАРЫҢЫЗ! Тест терезесінен шығуға болмайды!");
+        saveToStorage();
+        alert("Ескерту! Тест терезесінен шықпаңыз!");
     }
 };
+
+// Бет жүктелгенде тексеру
+window.onload = loadFromStorage;
 </script>
 
 </body>
