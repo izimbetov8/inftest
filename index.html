@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026m</title>
+    <title>ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</title>
     <style>
         :root { --p: #2980b9; --s: #27ae60; --d: #e74c3c; --g: #f5f6fa; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--g); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; user-select: none; }
@@ -32,14 +32,14 @@
 <div class="box">
     <div id="s-start">
         <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</h2>
-        <p id="t-desc">Questions: 20 | Time: 20 min</p>
+        <p id="t-desc">Questions: 20 | Time: 30 min</p>
         <select id="lang" onchange="updateUI()"><option value="kz">Қазақ тілі</option><option value="ru">Русский язык</option></select>
         <input type="text" id="ln" placeholder="Тегі / Фамилия"><input type="text" id="fn" placeholder="Аты / Имя">
         <button class="b-next" id="btn-start" onclick="start()">Тестті бастау</button>
     </div>
 
     <div id="s-test" class="hidden">
-        <div id="timer">20:00</div>
+        <div id="timer">30:00</div>
         <div style="color: #7f8c8d; margin-bottom: 10px;"><span id="q-label">Сұрақ</span>: <span id="q-i">1</span> / 20</div>
         <h3 id="q-t" style="min-height: 60px;"></h3>
         <div id="opts"></div>
@@ -187,20 +187,20 @@ const db = {
 
 const ui = {
     kz: { 
-        title: "ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026 Еңбекшіқазақ ауданы", desc: "Сұрақ: 20 | Уақыт: 20 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", 
+        title: "ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026 Еңбекшіқазақ ауданы", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", 
         viol: "Ереже бұзушылықтар", q_lbl: "Сұрақ", m_title: "Тестті аяқтауды растайсыз ба?", m_btn: "ИӘ", total: "ЖАЛПЫ БАЛЛ", 
         t_score: "Тест баллы", pen: "Балл алынып тасталды", done: "Тест аяқталды!",
         v1: "БАСҚА ТЕРЕЗЕГЕ АУЫСПАҢЫЗ!", v2: "НАЗАР АУДАРЫҢЫЗ КЕЛЕСІ АУЫСУДА БАЛЛ АЛЫНЫП ТАСТАЛАДЫ!", v3: "НАЗАР АУДАРЫҢЫЗ! Балл алынып тасталды."
     },
     ru: { 
-        title: "ЛУЧШИЙ УЧИТЕЛЬ ИНФОРМАТИКИ - 2026 Енбекшиказахский район", desc: "Вопросов: 20 | Время: 20 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", 
+        title: "ЛУЧШИЙ УЧИТЕЛЬ ИНФОРМАТИКИ - 2026 Енбекшиказахский район", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", 
         viol: "Нарушения правил", q_lbl: "Вопрос", m_title: "Подтверждаете завершение?", m_btn: "ДА", total: "ИТОГОВЫЙ БАЛЛ", 
         t_score: "Балл теста", pen: "Снято баллов", done: "Тест завершен!",
         v1: "НЕ ВЫХОДИТЕ ИЗ ОКНА!", v2: "ВНИМАНИЕ! НЕ ВЫХОДИТЕ ИЗ ОКНА! СЛЕДУЮЩИЙ РАЗ БУДУТ СНЯТЫ БАЛЛЫ", v3: "ВНИМАНИЕ! Баллы сняты."
     }
 };
 
-let qs=[], cur=0, ans=[], timer, time=1200, viol=0, L='kz', isStarted=false, isFinished=false;
+let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isStarted=false, isFinished=false;
 
 function updateUI() {
     L = document.getElementById('lang').value;
