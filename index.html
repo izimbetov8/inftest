@@ -248,6 +248,7 @@ const ui = {
 };
 
 let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isStarted=false, isFinished=false;
+let isPaused = false;
 
 function updateUI() {
     const t = ui[L];
@@ -352,8 +353,11 @@ function start(resume = false) {
     if(!resume) {
         qs = [...db[L]].sort(()=>0.5-Math.random()).slice(0, 20);
         ans = new Array(20).fill(null);
+        viol = 0; // Жаңа тест басталғанда нөлге қою
     }
-    isStarted = true;
+    
+    isStarted = true; // Бұл өте маңызды!
+    isFinished = false;
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.remove('hidden');
     
@@ -401,16 +405,16 @@ function openModal() { document.getElementById('modal').classList.remove('hidden
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 function finish() {
-    // 1. Барлық сұраққа жауап берілгенін тексеру
     const answeredCount = ans.filter(a => a !== null).length;
     if (answeredCount < 20) {
         const msg = (L === 'kz') 
             ? `Барлық сұраққа жауап беріңіз! (Орындалғаны: ${answeredCount}/20)` 
             : `Ответьте на все вопросы! (Выполнено: ${answeredCount}/20)`;
-        isPaused = true; // Blur-ды уақытша блоктаймыз
+        
+        isPaused = true; // Мұны қосу "бұзушылық" болып есептелуінен қорғайды
         alert(msg);
         closeModal();
-        setTimeout(() => { isPaused = false; }, 500); // Alert жабылған соң қайта қосамыз
+        setTimeout(() => { isPaused = false; }, 800);
         return;
     }
 
@@ -471,23 +475,27 @@ function showResult(d) {
 }
 
 window.onblur = function() {
-    // Егер тест басталмаса, аяқталса, модаль терезе ашық болса немесе паузада болса - жұмыс істемейді
-    if(!isStarted || isFinished || isPaused || !document.getElementById('modal').classList.contains('hidden')) return;
+    // Тексеріс: Тест басталған болуы керек және аяқталмауы керек
+    if(!isStarted || isFinished || isPaused) return;
     
+    // Егер "Аяқтау" модаль терезесі ашық болса, есептемеу
+    if(!document.getElementById('modal').classList.contains('hidden')) return;
+
     viol++; 
     document.getElementById('v-c').innerText = viol;
     
     let msg = "";
+    // Айыппұл: 3-ші рет шыққанда 1 балл, 4-шіде 2 балл және т.б.
     const penalty = (viol >= 3) ? (viol - 2) : 0;
 
     if (L === 'kz') {
         if (viol === 1) msg = "⚠️ ЕСКЕРТУ (1/2): Басқа терезеге ауыспаңыз!";
         else if (viol === 2) msg = "🚫 ҚАТАҢ ЕСКЕРТУ (2/2): Келесі жолы балл алынады!";
-        else msg = `❌ ЕРЕЖЕ БҰЗЫЛДЫ! ${penalty} алынды`;
+        else msg = `❌ ЕРЕЖЕ БҰЗЫЛДЫ! ${penalty} балл шегерілді!`;
     } else {
         if (viol === 1) msg = "⚠️ ПРЕДУПРЕЖДЕНИЕ (1/2): Не выходите из окна!";
         else if (viol === 2) msg = "🚫 ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ (2/2): В следующий раз будет снят балл!";
-        else msg = `❌ НАРУШЕНИЕ! ${penalty} балл снят`;
+        else msg = `❌ НАРУШЕНИЕ! Снято баллов: ${penalty}`;
     }
 
     if (penalty > 0) {
@@ -495,9 +503,10 @@ window.onblur = function() {
         document.getElementById('pen-count').innerText = penalty;
     }
 
-    isPaused = true; // Alert шыққанда blur қайталанбауы үшін
+    isPaused = true; 
     alert(msg);
-    setTimeout(() => { isPaused = false; }, 500); // Alert жабылған соң 0.5 сек кейін бақылауды қайта қосады
+    // Паузаны сәл кешіктіріп ашамыз, браузер "фокусты" қайта алғанша
+    setTimeout(() => { isPaused = false; }, 800);
 };
 window.onload = () => { 
     setLanguage(L); // 1. Тілді және интерфейсті баптайды
