@@ -407,8 +407,10 @@ function finish() {
         const msg = (L === 'kz') 
             ? `Барлық сұраққа жауап беріңіз! (Орындалғаны: ${answeredCount}/20)` 
             : `Ответьте на все вопросы! (Выполнено: ${answeredCount}/20)`;
+        isPaused = true; // Blur-ды уақытша блоктаймыз
         alert(msg);
-        closeModal(); 
+        closeModal();
+        setTimeout(() => { isPaused = false; }, 500); // Alert жабылған соң қайта қосамыз
         return;
     }
 
@@ -469,43 +471,34 @@ function showResult(d) {
 }
 
 window.onblur = function() {
-    // Егер тест басталмаса, аяқталса немесе растау терезесі ашық болса - жұмыс істемейді
-    if(!isStarted || isFinished || !document.getElementById('modal').classList.contains('hidden')) return;
+    // Егер тест басталмаса, аяқталса, модаль терезе ашық болса немесе паузада болса - жұмыс істемейді
+    if(!isStarted || isFinished || isPaused || !document.getElementById('modal').classList.contains('hidden')) return;
     
-    viol++; // Бұзушылық санын арттыру
+    viol++; 
     document.getElementById('v-c').innerText = viol;
     
     let msg = "";
-    const penalty = (viol >= 3) ? (viol - 2) : 0; // 3-ші реттен бастап есептеу
+    const penalty = (viol >= 3) ? (viol - 2) : 0;
 
-    // Тілге байланысты хабарламалар
     if (L === 'kz') {
-        if (viol === 1) {
-            msg = "⚠️ ЕСКЕРТУ (1/2): Басқа терезеге ауыспаңыз!";
-        } else if (viol === 2) {
-            msg = "🚫 ҚАТАҢ ЕСКЕРТУ (2/2): Келесі жолы балл алынады!";
-        } else {
-            msg = `❌ ЕРЕЖЕ БҰЗЫЛДЫ! ${penalty} алынды`;
-        }
+        if (viol === 1) msg = "⚠️ ЕСКЕРТУ (1/2): Басқа терезеге ауыспаңыз!";
+        else if (viol === 2) msg = "🚫 ҚАТАҢ ЕСКЕРТУ (2/2): Келесі жолы балл алынады!";
+        else msg = `❌ ЕРЕЖЕ БҰЗЫЛДЫ! ${penalty} алынды`;
     } else {
-        if (viol === 1) {
-            msg = "⚠️ ПРЕДУПРЕЖДЕНИЕ (1/2): Не выходите из окна!";
-        } else if (viol === 2) {
-            msg = "🚫 ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ (2/2): В следующий раз будет снят балл!";
-        } else {
-            msg = `❌ НАРУШЕНИЕ! ${penalty} балл снят`;
-        }
+        if (viol === 1) msg = "⚠️ ПРЕДУПРЕЖДЕНИЕ (1/2): Не выходите из окна!";
+        else if (viol === 2) msg = "🚫 ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ (2/2): В следующий раз будет снят балл!";
+        else msg = `❌ НАРУШЕНИЕ! ${penalty} балл снят`;
     }
 
-    // Экрандағы "Шегерілген балл" көрсеткішін жаңарту
     if (penalty > 0) {
         document.getElementById('pen-info').style.display = "inline";
         document.getElementById('pen-count').innerText = penalty;
     }
 
+    isPaused = true; // Alert шыққанда blur қайталанбауы үшін
     alert(msg);
+    setTimeout(() => { isPaused = false; }, 500); // Alert жабылған соң 0.5 сек кейін бақылауды қайта қосады
 };
-
 window.onload = () => { 
     setLanguage(L); // 1. Тілді және интерфейсті баптайды
     loadProgress(); // 2. Сақталған прогресті тексереді
