@@ -334,29 +334,39 @@ function openModal() { document.getElementById('modal').classList.remove('hidden
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 function finish() {
+    // 1. Егер тест әлдеқашан аяқталса, функцияны тоқтату (қайталап басудан қорғау)
     if(state.finished) return; 
 
+    // 2. Тест күйін өзгерту
     state.finished = true; 
     state.active = false;
-    clearInterval(timer); 
-    save(); 
+    clearInterval(timer); // Таймерді тоқтату
+    save(); // LocalStorage-ға сақтау
 
-    // Модальды терезедегі түймені өзгерту
+    // 3. Модаль ішіндегі "ИӘ" батырмасын өзгерту (ID: confirm-finish-btn)
     const confBtn = document.getElementById('confirm-finish-btn');
     if(confBtn) {
-        confBtn.innerText = (state.L === 'kz') ? "АЯҚТАЛДЫ" : "ЗАВЕРШЕНО";
-        confBtn.disabled = true;
-        confBtn.style.background = "#bdc3c7"; // Сұр түске бояу
+        confBtn.innerText = ui[state.L].fin_done; // "АЯҚТАЛДЫ" немесе "ЗАВЕРШЕНО"
+        confBtn.disabled = true; // Батырманы белсенді емес ету
+        confBtn.style.background = "#bdc3c7"; // Түсін сұрғылт ету (визуалды эффект)
     }
-
-    // Тест бетіндегі негізгі "Аяқтау" түймесін де өзгерту
+    
+    // 4. Тест бетіндегі (астындағы) негізгі "Аяқтау" батырмасын өзгерту (ID: f-btn)
     const mainFinBtn = document.getElementById('f-btn');
     if(mainFinBtn) {
-        mainFinBtn.innerText = (state.L === 'kz') ? "АЯҚТАЛДЫ" : "ЗАВЕРШЕНО";
+        mainFinBtn.innerText = ui[state.L].fin_done;
         mainFinBtn.disabled = true;
     }
 
-    showResult();
+    // 5. "Болдырмау" батырмасын жасырып тастау
+    const cancelBtn = document.getElementById('cancel-btn');
+    if(cancelBtn) cancelBtn.classList.add('hidden');
+
+    // 6. 0.6 секундтан кейін нәтиже бетін көрсету
+    setTimeout(() => {
+        closeModal(); // Модальды жабу
+        showResult(); // Нәтижелерді шығару
+    }, 600);
 }
 
 function showResult(d) {
