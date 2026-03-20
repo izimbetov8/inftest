@@ -334,17 +334,29 @@ function openModal() { document.getElementById('modal').classList.remove('hidden
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 function finish() {
-    isFinished = true; isStarted = false; clearInterval(timer); closeModal();
-    let r = 0; ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
-    let p = (viol >= 3) ? (viol - 2) : 0;
-    const res = { L, ln: document.getElementById('ln').value, fn: document.getElementById('fn').value, raw: r, viol, pen: p, score: Math.max(0, r-p) };
-    
-    localStorage.removeItem('quiz_progress');
-    localStorage.setItem('quiz_result', JSON.stringify(res));
+    if(state.finished) return; 
 
-    fetch('https://script.google.com/macros/s/AKfycbx1XKGUnCtvWlsQgjaRYPwu5DJ0tG6wJv6LsWgVMNIufeVCUfg9t_VK-ofgcqinvhvA/exec', {
-        method: 'POST', mode: 'no-cors', body: JSON.stringify(res)
-    }).then(() => showResult(res));
+    state.finished = true; 
+    state.active = false;
+    clearInterval(timer); 
+    save(); 
+
+    // Модальды терезедегі түймені өзгерту
+    const confBtn = document.getElementById('confirm-finish-btn');
+    if(confBtn) {
+        confBtn.innerText = (state.L === 'kz') ? "АЯҚТАЛДЫ" : "ЗАВЕРШЕНО";
+        confBtn.disabled = true;
+        confBtn.style.background = "#bdc3c7"; // Сұр түске бояу
+    }
+
+    // Тест бетіндегі негізгі "Аяқтау" түймесін де өзгерту
+    const mainFinBtn = document.getElementById('f-btn');
+    if(mainFinBtn) {
+        mainFinBtn.innerText = (state.L === 'kz') ? "АЯҚТАЛДЫ" : "ЗАВЕРШЕНО";
+        mainFinBtn.disabled = true;
+    }
+
+    showResult();
 }
 
 function showResult(d) {
