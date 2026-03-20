@@ -208,6 +208,38 @@ function closeInst() {
     document.getElementById('btn-start').style.display = "block";
 }
 
+// ПАРАҚШАНЫ ЖАҢАРТҚАНДА ДЕРЕКТЕРДІ САҚТАУ
+function saveProgress() {
+    if (isStarted && !isFinished) {
+        const data = {
+            qs, cur, ans, time, viol, L,
+            fn: document.getElementById('fn').value,
+            ln: document.getElementById('ln').value
+        };
+        localStorage.setItem('quiz_progress', JSON.stringify(data));
+    }
+}
+
+function loadProgress() {
+    const result = localStorage.getItem('quiz_result');
+    if (result) {
+        showResult(JSON.parse(result));
+        return;
+    }
+
+    const saved = localStorage.getItem('quiz_progress');
+    if (saved) {
+        const d = JSON.parse(saved);
+        qs = d.qs; cur = d.cur; ans = d.ans; time = d.time; viol = d.viol; L = d.L;
+        document.getElementById('fn').value = d.fn;
+        document.getElementById('ln').value = d.ln;
+        setLanguage(L);
+        start(true);
+    } else {
+        updateUI();
+    }
+}
+    
 function start(resume = false) {
     let f=document.getElementById('fn').value.trim(), l=document.getElementById('ln').value.trim();
     if(!f || !l) return alert(L==='kz'?"Аты-жөніңізді жазыңыз!":"Введите ФИО!");
