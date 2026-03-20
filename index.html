@@ -9,7 +9,7 @@
         body { font-family: 'Segoe UI', sans-serif; background: var(--g); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; user-select: none; }
         .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 700px; text-align: center; border-top: 6px solid var(--p); position: relative; }
         .hidden { display: none !important; }
-        input, select { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #dfe6e9; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #dfe6e9; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
         #timer { font-size: 28px; font-weight: bold; color: var(--d); border: 3px solid var(--d); padding: 10px 25px; border-radius: 12px; display: inline-block; margin-bottom: 25px; background: #fff5f5; }
         .opt { display: block; text-align: left; padding: 16px; margin: 12px 0; border: 2px solid #f1f2f6; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 17px; }
         .opt:hover { border-color: var(--p); background: #f0f7ff; }
@@ -31,20 +31,20 @@
 
 <div class="box">
     <div id="s-start">
-    <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</h2>
-    <p id="t-desc">Questions: 20 | Time: 30 min</p>
-    
-    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-        <button type="button" onclick="setLanguage('kz')" id="btn-kz" style="background: #34495e; flex: 1;">Қазақша</button>
-        <button type="button" onclick="setLanguage('ru')" id="btn-ru" style="background: #34495e; flex: 1;">Русский</button>
-    </div>
+        <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</h2>
+        <p id="t-desc">Questions: 20 | Time: 30 min</p>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button type="button" onclick="setLanguage('kz')" id="btn-kz" style="background: #2980b9; flex: 1;">Қазақша</button>
+            <button type="button" onclick="setLanguage('ru')" id="btn-ru" style="background: #34495e; flex: 1;">Русский</button>
+        </div>
 
-    <input type="text" id="ln" placeholder="Тегі / Фамилия">
-    <input type="text" id="fn" placeholder="Аты / Имя">
-    
-    <button type="button" onclick="openInst()" id="btn-inst-main" style="background: #f39c12; margin-bottom: 10px; width: 100%;">Нұсқаулық / Инструкция</button>
-    <button class="b-next" id="btn-start" onclick="start()" style="display: none;">Тестті бастау</button>
-</div>
+        <input type="text" id="ln" placeholder="Тегі / Фамилия">
+        <input type="text" id="fn" placeholder="Аты / Имя">
+        
+        <button type="button" onclick="openInst()" id="btn-inst-main" style="background: #f39c12; margin-bottom: 10px; width: 100%;">Нұсқаулық / Инструкция</button>
+        <button class="b-next" id="btn-start" onclick="start()" style="display: none;">Тестті бастау</button>
+    </div>
 
     <div id="s-test" class="hidden">
         <div id="timer">30:00</div>
@@ -62,7 +62,7 @@
     <div id="s-res" class="hidden">
         <h3 id="r-n"></h3>
         <div class="res-card">
-            <div id="res-lbl-total" style="font-weight: bold; color: #7f8c8d;">ЖАЛПЫ БАЛЛ / ОБЩИЙ БАЛЛ</div>
+            <div id="res-lbl-total" style="font-weight: bold; color: #7f8c8d;">ЖАЛПЫ БАЛЛ</div>
             <div id="r-score-big">0</div>
             <div id="r-p" style="font-size: 24px; color: var(--p); font-weight: bold;">0%</div>
             <div class="res-row">
@@ -78,7 +78,7 @@
 <div id="modal" class="modal-overlay hidden" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
         <h3 id="m-title">Тестті аяқтауды растайсыз ба?</h3>
-        <button class="b-fin" onclick="finish()" style="width: 100%;" id="m-btn">ИӘ / ДА</button>
+        <button class="b-fin" onclick="finish()" style="width: 100%;" id="m-btn">ИӘ</button>
     </div>
 </div>
 
@@ -206,14 +206,14 @@ const ui = {
         viol: "Ереже бұзушылықтар", q_lbl: "Сұрақ", m_title: "Тестті аяқтауды растайсыз ба?", m_btn: "ИӘ", total: "ЖАЛПЫ БАЛЛ", 
         t_score: "Тест баллы", pen: "Шегерілген балл", done: "Тест аяқталды!",
         v1: "БАСҚА ТЕРЕЗЕГЕ АУЫСПАҢЫЗ!", v2: "НАЗАР АУДАРЫҢЫЗ КЕЛЕСІ АУЫСУДА БАЛЛ АЛЫНЫП ТАСТАЛАДЫ!", v3: "НАЗАР АУДАРЫҢЫЗ! 1 балл алынып тасталды.",
-        inst_text: "<b>Тест ережелері:</b><br>• Сұрақ саны: 20<br>• Уақыт: 30 минут<br>• <b>МАҢЫЗДЫ:</b> Басқа терезеге немесе қосымшаға ауыспаңыз!<br>• 3-ші реттен бастап әр ауысу үшін 1 балл алынып тасталады.<br>• Тестті аяқтаған соң <b>АЯҚТАУ</b> батырмасын басыңыз."
+        inst_text: "<b>Тест ережелері:</b><br>• Сұрақ саны: 20<br>• Уақыт: 30 минут<br>• <b>МАҢЫЗДЫ:</b> Басқа терезеге ауыспаңыз!<br>• 3-ші реттен бастап әр ауысу үшін 1 балл алынып тасталады."
     },
     ru: { 
         title: "ЛУЧШИЙ УЧИТЕЛЬ ИНФОРМАТИКИ - 2026 Енбекшиказахский район", desc: "Вопросов: 20 | Время: 30 минут", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", 
         viol: "Нарушения правил", q_lbl: "Вопрос", m_title: "Подтверждаете завершение?", m_btn: "ДА", total: "ИТОГОВЫЙ БАЛЛ", 
         t_score: "Балл теста", pen: "Снято баллов", done: "Тест завершен!",
         v1: "НЕ ВЫХОДИТЕ ИЗ ОКНА!", v2: "ВНИМАНИЕ! СЛЕДУЮЩИЙ РАЗ БУДУТ СНЯТЫ БАЛЛЫ", v3: "ВНИМАНИЕ! Снять 1 балл",
-        inst_text: "<b>Правила теста:</b><br>• Количество вопросов: 20<br>• Время: 30 минут<br>• <b>ВАЖНО:</b> Не выходите из окна браузера!<br>• Начиная с 3-го нарушения, за каждый выход снимается 1 балл.<br>• После окончания нажмите кнопку <b>ЗАВЕРШИТЬ</b>."
+        inst_text: "<b>Правила теста:</b><br>• Количество вопросов: 20<br>• Время: 30 минут<br>• <b>ВАЖНО:</b> Не выходите из окна браузера!<br>• Начиная с 3-го нарушения, за каждый выход снимается 1 балл."
     }
 };
 
@@ -238,8 +238,14 @@ function updateUI() {
     document.getElementById('txt-done-msg').innerText = t.done;
 }
 
+function setLanguage(lang) {
+    L = lang;
+    updateUI();
+    document.getElementById('btn-kz').style.background = (lang === 'kz') ? '#2980b9' : '#34495e';
+    document.getElementById('btn-ru').style.background = (lang === 'ru') ? '#2980b9' : '#34495e';
+}
+
 function openInst() {
-    L = document.getElementById('lang').value;
     document.getElementById('inst-body').innerHTML = ui[L].inst_text;
     document.getElementById('modal-inst').classList.remove('hidden');
 }
@@ -247,30 +253,6 @@ function openInst() {
 function closeInst() {
     document.getElementById('modal-inst').classList.add('hidden');
     document.getElementById('btn-start').style.display = "block";
-}
-
-function saveState(final = false) {
-    if(final) {
-        let r=0; ans.forEach((a,i)=>{if(a===qs[i].c) r++;});
-        let p = (viol >= 3) ? (viol - 2) : 0;
-        localStorage.setItem('quiz_result', JSON.stringify({ fn: document.getElementById('fn').value, ln: document.getElementById('ln').value, r, p, viol, L }));
-        localStorage.removeItem('quiz_progress');
-        return;
-    }
-    localStorage.setItem('quiz_progress', JSON.stringify({ qs, cur, ans, time, viol, L, fn: document.getElementById('fn').value, ln: document.getElementById('ln').value }));
-}
-
-function loadState() {
-    const res = localStorage.getItem('quiz_result');
-    if(res) { showResult(JSON.parse(res)); return; }
-    const saved = localStorage.getItem('quiz_progress');
-    if(saved) {
-        const d = JSON.parse(saved);
-        qs = d.qs; cur = d.cur; ans = d.ans; time = d.time; viol = d.viol; L = d.L;
-        document.getElementById('fn').value = d.fn; document.getElementById('ln').value = d.ln;
-        document.getElementById('lang').value = L;
-        updateUI(); start(true);
-    } else { updateUI(); }
 }
 
 function start(resume = false) {
@@ -283,7 +265,7 @@ function start(resume = false) {
     isStarted = true;
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.remove('hidden');
-    timer = setInterval(() => { if(!isFinished) { time--; updateT(); saveState(); if(time<=0) finish(); } }, 1000);
+    timer = setInterval(() => { if(!isFinished) { time--; updateT(); if(time<=0) finish(); } }, 1000);
     render();
 }
 
@@ -298,7 +280,7 @@ function render() {
     let b = document.getElementById('opts'); b.innerHTML='';
     qs[cur].a.forEach((o,i)=>{
         let d=document.createElement('div'); d.className='opt'+(ans[cur]===i?' sel':'');
-        d.innerText=o; d.onclick=()=>{ans[cur]=i; render(); saveState();}; b.appendChild(d);
+        d.innerText=o; d.onclick=()=>{ans[cur]=i; render();}; b.appendChild(d);
     });
     document.getElementById('p-btn').disabled = (cur===0);
     document.getElementById('n-btn').classList.toggle('hidden', cur===19);
@@ -306,92 +288,37 @@ function render() {
     document.getElementById('v-c').innerText = viol;
 }
 
-function move(n) { cur+=n; render(); saveState(); }
+function move(n) { cur+=n; render(); }
 function openModal() { document.getElementById('modal').classList.remove('hidden'); }
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 function finish() {
-    isFinished = true; 
-    isStarted = false;
-    clearInterval(timer); 
-    closeModal();
-    
-    let r = 0; 
-    ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
-    let p = (viol >= 3) ? (viol - 2) : 0;              
-    let final = Math.max(0, r - p);                    
-    
-    const results = {
-        L: L,
-        ln: document.getElementById('ln').value,
-        fn: document.getElementById('fn').value,
-        raw: r,
-        viol: viol,
-        pen: p,
-        score: final
-    };
-
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx1XKGUnCtvWlsQgjaRYPwu5DJ0tG6wJv6LsWgVMNIufeVCUfg9t_VK-ofgcqinvhvA/exec';
-    
-    fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors', 
-        cache: 'no-cache',
-        body: JSON.stringify(results)
-    })
-    .then(() => {
-        saveState(true); 
-        showResult({ 
-            fn: results.fn, 
-            ln: results.ln, 
-            r: r, 
-            p: p, 
-            viol: viol, 
-            L: L 
-        });
-    })
-    .catch(error => {
-        console.error('Қате:', error);
-        saveState(true);
-        loadState();
-    });
+    isFinished = true; isStarted = false; clearInterval(timer); closeModal();
+    let r = 0; ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
+    let p = (viol >= 3) ? (viol - 2) : 0;
+    const res = { L, ln: document.getElementById('ln').value, fn: document.getElementById('fn').value, raw: r, viol, pen: p, score: Math.max(0, r-p) };
+    fetch('https://script.google.com/macros/s/AKfycbx1XKGUnCtvWlsQgjaRYPwu5DJ0tG6wJv6LsWgVMNIufeVCUfg9t_VK-ofgcqinvhvA/exec', {
+        method: 'POST', mode: 'no-cors', body: JSON.stringify(res)
+    }).then(() => showResult(res));
 }
 
 function showResult(d) {
-    L = d.L; updateUI();
-    document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.add('hidden');
     document.getElementById('s-res').classList.remove('hidden');
     document.getElementById('r-n').innerText = d.ln + " " + d.fn;
-    document.getElementById('r-score-big').innerText = Math.max(0, d.r - d.p);
-    document.getElementById('r-p').innerText = Math.round((Math.max(0, d.r - d.p)/20)*100) + "%";
-    document.getElementById('r-raw').innerText = d.r;
+    document.getElementById('r-score-big').innerText = d.score;
+    document.getElementById('r-p').innerText = Math.round((d.score/20)*100) + "%";
+    document.getElementById('r-raw').innerText = d.raw;
     document.getElementById('r-viol').innerText = d.viol;
-    document.getElementById('r-pen').innerText = d.p;
+    document.getElementById('r-pen').innerText = d.pen;
 }
 
 window.onblur = function() {
-    if(!isStarted || isFinished || !document.getElementById('modal').classList.contains('hidden')) return;
-    viol++; document.getElementById('v-c').innerText = viol; saveState();
+    if(!isStarted || isFinished) return;
+    viol++; document.getElementById('v-c').innerText = viol;
     alert((viol === 1) ? ui[L].v1 : (viol === 2 ? ui[L].v2 : ui[L].v3));
 }
-
-window.onload = loadState;
-
-function setLanguage(lang) {
-    L = lang; // Жаһандық L айнымалысын өзгерту
-    updateUI(); // Мәтіндерді жаңарту
-    
-    // Батырмалардың түсін өзгерту (қайсысы белсенді екенін көрсету)
-    document.getElementById('btn-kz').style.background = (lang === 'kz') ? '#2980b9' : '#34495e';
-    document.getElementById('btn-ru').style.background = (lang === 'ru') ? '#2980b9' : '#34495e';
-    
-    // Егер нұсқаулық ашық тұрса, оны да жаңарту
-    if (!document.getElementById('modal-inst').classList.contains('hidden')) {
-        openInst();
-    }
-}
-    
+window.onload = updateUI;
 </script>
 </body>
 </html>
