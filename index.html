@@ -31,19 +31,20 @@
 
 <div class="box">
     <div id="s-start">
-        <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</h2>
-        <p id="t-desc">Questions: 20 | Time: 30 min</p>
-        <select id="lang" onchange="updateUI()">
-            <option value="kz">Қазақ тілі</option>
-            <option value="ru">Русский язык</option>
-        </select>
-        <input type="text" id="ln" placeholder="Тегі / Фамилия">
-        <input type="text" id="fn" placeholder="Аты / Имя">
-        
-        <button type="button" onclick="openInst()" style="background: #f39c12; margin-bottom: 10px; width: 100%;">Нұсқаулық / Инструкция</button>
-        
-        <button class="b-next" id="btn-start" onclick="start()" style="display: none;">Тестті бастау</button>
+    <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</h2>
+    <p id="t-desc">Questions: 20 | Time: 30 min</p>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <button type="button" onclick="setLanguage('kz')" id="btn-kz" style="background: #34495e; flex: 1;">Қазақша</button>
+        <button type="button" onclick="setLanguage('ru')" id="btn-ru" style="background: #34495e; flex: 1;">Русский</button>
     </div>
+
+    <input type="text" id="ln" placeholder="Тегі / Фамилия">
+    <input type="text" id="fn" placeholder="Аты / Имя">
+    
+    <button type="button" onclick="openInst()" id="btn-inst-main" style="background: #f39c12; margin-bottom: 10px; width: 100%;">Нұсқаулық / Инструкция</button>
+    <button class="b-next" id="btn-start" onclick="start()" style="display: none;">Тестті бастау</button>
+</div>
 
     <div id="s-test" class="hidden">
         <div id="timer">30:00</div>
@@ -219,7 +220,6 @@ const ui = {
 let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isStarted=false, isFinished=false;
 
 function updateUI() {
-    L = document.getElementById('lang').value;
     const t = ui[L];
     document.getElementById('t-title').innerText = t.title;
     document.getElementById('t-desc').innerText = t.desc;
@@ -377,6 +377,21 @@ window.onblur = function() {
 }
 
 window.onload = loadState;
+
+function setLanguage(lang) {
+    L = lang; // Жаһандық L айнымалысын өзгерту
+    updateUI(); // Мәтіндерді жаңарту
+    
+    // Батырмалардың түсін өзгерту (қайсысы белсенді екенін көрсету)
+    document.getElementById('btn-kz').style.background = (lang === 'kz') ? '#2980b9' : '#34495e';
+    document.getElementById('btn-ru').style.background = (lang === 'ru') ? '#2980b9' : '#34495e';
+    
+    // Егер нұсқаулық ашық тұрса, оны да жаңарту
+    if (!document.getElementById('modal-inst').classList.contains('hidden')) {
+        openInst();
+    }
+}
+    
 </script>
 </body>
 </html>
