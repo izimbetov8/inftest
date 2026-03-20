@@ -401,6 +401,20 @@ function openModal() { document.getElementById('modal').classList.remove('hidden
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 function finish() {
+
+    // ЖАҢА: Барлық сұраққа жауап берілгенін тексеру
+    const answeredCount = ans.filter(a => a !== null).length;
+    if (answeredCount < 20) {
+        const msg = (L === 'kz') 
+            ? `Барлық сұраққа жауап беріңіз! (Орындалғаны: ${answeredCount}/20)` 
+            : `Ответьте на все вопросы! (Выполнено: ${answeredCount}/20)`;
+        alert(msg);
+        closeModal(); // Модальды жабу, қолданушы тестке қайтады
+        return;
+    }
+
+    const modalBtn = document.getElementById('m-btn');
+    
     const modalBtn = document.getElementById('m-btn');
     const finishBtn = document.getElementById('f-btn');
     
