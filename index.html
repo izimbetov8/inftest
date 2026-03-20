@@ -24,7 +24,7 @@
         .res-val { font-size: 32px; font-weight: 800; color: #2d3436; display: block; }
         .res-txt { font-size: 14px; color: #636e72; font-weight: 600; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-card { background: white; padding: 30px; border-radius: 15px; width: 320px; text-align: center; }
+        .modal-card { background: white; padding: 30px; border-radius: 15px; width: 350px; text-align: center; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -33,9 +33,16 @@
     <div id="s-start">
         <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</h2>
         <p id="t-desc">Questions: 20 | Time: 30 min</p>
-        <select id="lang" onchange="updateUI()"><option value="kz">Қазақ тілі</option><option value="ru">Русский язык</option></select>
-        <input type="text" id="ln" placeholder="Тегі / Фамилия"><input type="text" id="fn" placeholder="Аты / Имя">
-        <button class="b-next" id="btn-start" onclick="start()">Тестті бастау</button>
+        <select id="lang" onchange="updateUI()">
+            <option value="kz">Қазақ тілі</option>
+            <option value="ru">Русский язык</option>
+        </select>
+        <input type="text" id="ln" placeholder="Тегі / Фамилия">
+        <input type="text" id="fn" placeholder="Аты / Имя">
+        
+        <button type="button" onclick="openInst()" style="background: #f39c12; margin-bottom: 10px; width: 100%;">Нұсқаулық / Инструкция</button>
+        
+        <button class="b-next" id="btn-start" onclick="start()" style="display: none;">Тестті бастау</button>
     </div>
 
     <div id="s-test" class="hidden">
@@ -59,8 +66,8 @@
             <div id="r-p" style="font-size: 24px; color: var(--p); font-weight: bold;">0%</div>
             <div class="res-row">
                 <div class="res-item"><span class="res-val" id="r-raw">0</span><span class="res-txt" id="res-lbl-test">Тест балы</span></div>
-                <div class="res-item" style="color: var(--d);"><span class="res-val" id="r-viol">0</span><span class="res-txt" id="res-lbl-viol">Бұзушылықтар / Нарушения</span></div>
-                <div class="res-item"><span class="res-val" id="r-pen">0</span><span class="res-txt" id="res-lbl-pen">Шегерілді / Снято баллов</span></div>
+                <div class="res-item" style="color: var(--d);"><span class="res-val" id="r-viol">0</span><span class="res-txt" id="res-lbl-viol">Бұзушылықтар</span></div>
+                <div class="res-item"><span class="res-val" id="r-pen">0</span><span class="res-txt" id="res-lbl-pen">Шегерілді</span></div>
             </div>
         </div>
         <p style="color: #d63031; font-weight: bold; margin-top: 15px;" id="txt-done-msg"></p>
@@ -69,13 +76,20 @@
 
 <div id="modal" class="modal-overlay hidden" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
-        <h3 id="m-title">Тестті аяқтауды растайсыз ба? / Подверждаете завершение теста?</h3>
+        <h3 id="m-title">Тестті аяқтауды растайсыз ба?</h3>
         <button class="b-fin" onclick="finish()" style="width: 100%;" id="m-btn">ИӘ / ДА</button>
     </div>
 </div>
 
+<div id="modal-inst" class="modal-overlay hidden">
+    <div class="modal-card" style="text-align: left; width: 90%; max-width: 450px;">
+        <h3 style="text-align: center;">Нұсқаулық / Инструкция</h3>
+        <div id="inst-body" style="font-size: 15px; line-height: 1.5; margin: 15px 0;"></div>
+        <button class="b-fin" onclick="closeInst()" style="width: 100%;">Түсінікті / Понятно</button>
+    </div>
+</div>
+
 <script>
-// Сұрақтар базасы өзгеріссіз қалады
 const db = {
     kz: [
         {q:"Python тілінде айнымалыны дұрыс жариялау тәсілін көрсетіңіз.", a:["var x = 10","x = 10","int x = 10","declare x = 10"], c:1},
@@ -189,14 +203,16 @@ const ui = {
     kz: { 
         title: "ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026 Еңбекшіқазақ ауданы", desc: "Сұрақ: 20 | Уақыт: 30 мин", start: "Тестті бастау", prev: "Артқа", next: "Келесі", fin: "Аяқтау", 
         viol: "Ереже бұзушылықтар", q_lbl: "Сұрақ", m_title: "Тестті аяқтауды растайсыз ба?", m_btn: "ИӘ", total: "ЖАЛПЫ БАЛЛ", 
-        t_score: "Тест баллы", pen: "Балл алынып тасталды", done: "Тест аяқталды!",
-        v1: "БАСҚА ТЕРЕЗЕГЕ АУЫСПАҢЫЗ!", v2: "НАЗАР АУДАРЫҢЫЗ КЕЛЕСІ АУЫСУДА БАЛЛ АЛЫНЫП ТАСТАЛАДЫ!", v3: "НАЗАР АУДАРЫҢЫЗ! 1 балл алынып тасталды."
+        t_score: "Тест баллы", pen: "Шегерілген балл", done: "Тест аяқталды!",
+        v1: "БАСҚА ТЕРЕЗЕГЕ АУЫСПАҢЫЗ!", v2: "НАЗАР АУДАРЫҢЫЗ КЕЛЕСІ АУЫСУДА БАЛЛ АЛЫНЫП ТАСТАЛАДЫ!", v3: "НАЗАР АУДАРЫҢЫЗ! 1 балл алынып тасталды.",
+        inst_text: "<b>Тест ережелері:</b><br>• Сұрақ саны: 20<br>• Уақыт: 30 минут<br>• <b>МАҢЫЗДЫ:</b> Басқа терезеге немесе қосымшаға ауыспаңыз!<br>• 3-ші реттен бастап әр ауысу үшін 1 балл шегеріледі.<br>• Аяқтаған соң 'Аяқтау' батырмасын басуды ұмытпаңыз."
     },
     ru: { 
         title: "ЛУЧШИЙ УЧИТЕЛЬ ИНФОРМАТИКИ - 2026 Енбекшиказахский район", desc: "Вопросов: 20 | Время: 30 мин", start: "Начать тест", prev: "Назад", next: "Далее", fin: "Завершить", 
         viol: "Нарушения правил", q_lbl: "Вопрос", m_title: "Подтверждаете завершение?", m_btn: "ДА", total: "ИТОГОВЫЙ БАЛЛ", 
         t_score: "Балл теста", pen: "Снято баллов", done: "Тест завершен!",
-        v1: "НЕ ВЫХОДИТЕ ИЗ ОКНА!", v2: "ВНИМАНИЕ! НЕ ВЫХОДИТЕ ИЗ ОКНА! СЛЕДУЮЩИЙ РАЗ БУДУТ СНЯТЫ БАЛЛЫ", v3: "ВНИМАНИЕ! Снять 1 балл"
+        v1: "НЕ ВЫХОДИТЕ ИЗ ОКНА!", v2: "ВНИМАНИЕ! СЛЕДУЮЩИЙ РАЗ БУДУТ СНЯТЫ БАЛЛЫ", v3: "ВНИМАНИЕ! Снять 1 балл",
+        inst_text: "<b>Правила теста:</b><br>• Кол-во вопросов: 20<br>• Время: 30 минут<br>• <b>ВАЖНО:</b> Не выходите из окна браузера!<br>• Начиная с 3-го нарушения, за каждый выход снимается 1 балл.<br>• После окончания нажмите кнопку 'Завершить'."
     }
 };
 
@@ -220,6 +236,17 @@ function updateUI() {
     document.getElementById('res-lbl-viol').innerText = t.viol;
     document.getElementById('res-lbl-pen').innerText = t.pen;
     document.getElementById('txt-done-msg').innerText = t.done;
+}
+
+function openInst() {
+    L = document.getElementById('lang').value;
+    document.getElementById('inst-body').innerHTML = ui[L].inst_text;
+    document.getElementById('modal-inst').classList.remove('hidden');
+}
+
+function closeInst() {
+    document.getElementById('modal-inst').classList.add('hidden');
+    document.getElementById('btn-start').style.display = "block";
 }
 
 function saveState(final = false) {
@@ -289,21 +316,19 @@ function finish() {
     clearInterval(timer); 
     closeModal();
     
-    // Есептеулер
     let r = 0; 
     ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
     let p = (viol >= 3) ? (viol - 2) : 0;              
     let final = Math.max(0, r - p);                    
     
-    // Деректерді объект ретінде жинау
     const results = {
-        L: L,                               // language
-        ln: document.getElementById('ln').value, // lastName
-        fn: document.getElementById('fn').value, // firstName
-        raw: r,                             // RawScore
-        viol: viol,                         // violations
-        pen: p,                             // Penalty
-        score: final                        // FinalScore
+        L: L,
+        ln: document.getElementById('ln').value,
+        fn: document.getElementById('fn').value,
+        raw: r,
+        viol: viol,
+        pen: p,
+        score: final
     };
 
     const scriptURL = 'https://script.google.com/macros/s/AKfycbx1XKGUnCtvWlsQgjaRYPwu5DJ0tG6wJv6LsWgVMNIufeVCUfg9t_VK-ofgcqinvhvA/exec';
