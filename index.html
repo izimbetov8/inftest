@@ -401,28 +401,25 @@ function openModal() { document.getElementById('modal').classList.remove('hidden
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 function finish() {
-
-    // ЖАҢА: Барлық сұраққа жауап берілгенін тексеру
+    // 1. Барлық сұраққа жауап берілгенін тексеру
     const answeredCount = ans.filter(a => a !== null).length;
     if (answeredCount < 20) {
         const msg = (L === 'kz') 
             ? `Барлық сұраққа жауап беріңіз! (Орындалғаны: ${answeredCount}/20)` 
             : `Ответьте на все вопросы! (Выполнено: ${answeredCount}/20)`;
         alert(msg);
-        closeModal(); // Модальды жабу, қолданушы тестке қайтады
+        closeModal(); 
         return;
     }
 
-    const modalBtn = document.getElementById('m-btn');
-    
     const modalBtn = document.getElementById('m-btn');
     const finishBtn = document.getElementById('f-btn');
     
     if (modalBtn.disabled) return;
     
-    // 1. Батырмаларды бірден блоктау және күйін өзгерту
+    // 2. Батырмаларды блоктау
     modalBtn.disabled = true;
-    modalBtn.innerText = ui[L].fin_done || "АЯҚТАЛДЫ"; // Мәтінді бірден ауыстыру
+    modalBtn.innerText = ui[L].fin_done || "АЯҚТАЛДЫ";
     if(finishBtn) {
         finishBtn.disabled = true;
         finishBtn.innerText = ui[L].fin_done || "АЯҚТАЛДЫ";
@@ -432,7 +429,7 @@ function finish() {
     isStarted = false; 
     clearInterval(timer); 
 
-    // 2. Нәтижені есептеу
+    // 3. Нәтижені есептеу
     let r = 0; ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
     let p = (viol >= 3) ? (viol - 2) : 0;
     const res = { 
@@ -445,16 +442,12 @@ function finish() {
         score: Math.max(0, r-p) 
     };
     
-    // 3. Локалды сақтау
     localStorage.removeItem('quiz_progress');
     localStorage.setItem('quiz_result', JSON.stringify(res));
 
-    // 4. МЫНАУ МАҢЫЗДЫ: Модальды бірден жауып, нәтижені бірден көрсету
     closeModal();
-    showResult(res); // Бұл функция енді кідіріссіз шақырылады
+    showResult(res);
 
-    // 5. Деректерді "фонда" (артында) жіберу
-    // Бұл пайдаланушының экранына әсер етпейді
     fetch('https://script.google.com/macros/s/AKfycbx1XKGUnCtvWlsQgjaRYPwu5DJ0tG6wJv6LsWgVMNIufeVCUfg9t_VK-ofgcqinvhvA/exec', {
         method: 'POST', 
         mode: 'no-cors', 
@@ -514,7 +507,8 @@ window.onblur = function() {
 };
 
 window.onload = () => { 
-    loadProgress(); // Алдымен сақталған прогресті тексереді
+    setLanguage(L); // 1. Тілді және интерфейсті баптайды
+    loadProgress(); // 2. Сақталған прогресті тексереді
 };
 </script>
 </body>
