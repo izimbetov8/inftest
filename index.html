@@ -7,17 +7,41 @@
     <style>
         :root { --p: #2980b9; --s: #27ae60; --d: #e74c3c; --g: #f5f6fa; }
         body { 
-                font-family: 'Segoe UI', sans-serif; 
-                background: var(--g); 
-                display: flex; 
-                flex-direction: column; /* Элементтерді тігінен тізеді */
-                align-items: center; 
-                min-height: 100vh; 
-                margin: 0; 
-                user-select: none; 
-                padding: 20px; /* Астында орын болуы үшін */
-            }
-        .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 800px; text-align: center; border-top: 6px solid var(--p); position: relative; }
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--g); 
+            display: flex; 
+            flex-direction: column; /* Элементтерді бірінің астына бірін қою */
+            justify-content: center; /* Вертикальды ортаға келтіру */
+            align-items: center;    /* Горизонталды ортаға келтіру */
+            min-height: 100vh;      /* Экранның 100% биіктігін алу */
+            margin: 0; 
+            user-select: none; 
+            padding: 20px; 
+            box-sizing: border-box;
+        }
+        
+        .box { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 800px; 
+            text-align: center; 
+            border-top: 6px solid var(--p); 
+            position: relative;
+            /* margin-bottom: 0; алып тастаңыз, flex өзі реттейді */
+        }
+        
+        .final-footer {
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px; /* Тест пен автордың арасы */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .hidden { display: none !important; }
         input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #dfe6e9; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
         
@@ -178,11 +202,18 @@
     </div>
 </div>
 
-<div class="author-container">
+<footer class="final-footer">
     <div id="t-author" class="auth-label">Авторлық жоба</div>
-    <div class="auth-name">&copy; </div>
-
-</div>    
+    <div class="auth-name">&copy; ИЗИМБЕТОВ НУРЛАН</div>
+    
+    <a href="https://t.me/iznurlan" target="_blank" class="tg-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+            <path d="M22 2L11 13"></path>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        TELEGRAM
+    </a>
+</footer>   
     
 <script>
 // Сұрақтар базасы (өзгеріссіз қалды)
