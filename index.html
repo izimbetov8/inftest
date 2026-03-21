@@ -60,17 +60,21 @@
 
 <div class="box">
     <div id="s-start">
-        <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</h2>
-        <p id="t-desc">Questions: 20 | Time: 30 min</p>
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button type="button" onclick="setLanguage('kz')" id="btn-kz" style="background: #2980b9; flex: 1;">Қазақша</button>
-            <button type="button" onclick="setLanguage('ru')" id="btn-ru" style="background: #34495e; flex: 1;">Русский</button>
-        </div>
-        <input type="text" id="ln" placeholder="Тегі / Фамилия">
-        <input type="text" id="fn" placeholder="Аты / Имя">
-        <button type="button" onclick="openInst()" id="btn-inst-main" style="background: #f39c12; margin-bottom: 10px; width: 100%;">Нұсқаулық / Инструкция</button>
-        <button class="b-next" id="btn-start" onclick="start()" style="display: none;">Тестті бастау</button>
+    <h2 id="t-title">ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</h2>
+    <p id="t-desc">Questions: 20 | Time: 30 min</p>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <button type="button" onclick="setLanguage('kz')" id="btn-kz" style="background: #2980b9; flex: 1;">Қазақша</button>
+        <button type="button" onclick="setLanguage('ru')" id="btn-ru" style="background: #34495e; flex: 1;">Русский</button>
     </div>
+    <input type="text" id="ln" placeholder="Тегі / Фамилия">
+    <input type="text" id="fn" placeholder="Аты / Имя">
+
+    <input type="password" id="pass-input" placeholder="Кіру паролі / Пароль доступа" oninput="checkPass()" style="border: 2px solid #f39c12;">
+
+    <button type="button" onclick="openInst()" id="btn-inst-main" style="background: #f39c12; margin-bottom: 10px; width: 100%;">Нұсқаулық / Инструкция</button>
+    
+    <button class="b-next" id="btn-start" onclick="start()" style="display: none; width: 100%;">Тестті бастау</button>
+</div>
 
     <div id="s-test" class="hidden">
         <div class="test-header">
@@ -341,6 +345,20 @@ function loadProgress() {
         render();
     } else {
         updateUI();
+    }
+}
+
+function checkPass() {
+    const correctPass = "2026"; // ОСЫ ЖЕРГЕ ӨЗ ПАРОЛІҢІЗДІ ЖАЗЫҢЫЗ
+    const inputPass = document.getElementById('pass-input').value;
+    const btnStart = document.getElementById('btn-start');
+
+    if (inputPass === correctPass) {
+        // Пароль дұрыс болса, батырманы көрсетеміз
+        btnStart.style.display = "block";
+    } else {
+        // Пароль қате болса, батырманы қайта жасырамыз
+        btnStart.style.display = "none";
     }
 }
     
