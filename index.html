@@ -512,6 +512,27 @@ window.onload = () => {
     setLanguage(L); // 1. Тілді және интерфейсті баптайды
     loadProgress(); // 2. Сақталған прогресті тексереді
 };
+
+// БАРЛЫҚ ТЕХНИКАЛЫҚ КОМАНДАЛАРДЫ БЛОКТАУ
+document.onkeydown = function(e) {
+    // F12 (123)
+    if (e.keyCode === 123) {
+        return false;
+    }
+    // Ctrl+Shift+I (73), Ctrl+Shift+J (74), Ctrl+Shift+C (67)
+    if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+        return false;
+    }
+    // Ctrl+U (85) - Кодты қарау, Ctrl+S (83) - Сақтау
+    if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) {
+        return false;
+    }
+    // Ctrl+C (67), Ctrl+V (86), Ctrl+X (88) - Көшіру/Қою
+    if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88)) {
+        return false;
+    }
+};    
+    
 </script>
 </body>
 </html>
