@@ -259,6 +259,7 @@ let isPaused = false;
 function updateUI() {
     const t = ui[L];
     document.getElementById('t-title').innerHTML = t.title;
+    document.getElementById('t-author').innerText = t.authorText;
     document.getElementById('t-desc').innerText = t.desc;
     document.getElementById('btn-start').innerText = t.start;
     document.getElementById('p-btn').innerText = t.prev;
