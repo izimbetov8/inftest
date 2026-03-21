@@ -6,7 +6,17 @@
     <title>ҮЗДІК ИНФОРМАТИКА ПӘНІ МҰҒАЛІМІ - 2026</title>
     <style>
         :root { --p: #2980b9; --s: #27ae60; --d: #e74c3c; --g: #f5f6fa; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--g); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; user-select: none; }
+        body { 
+                font-family: 'Segoe UI', sans-serif; 
+                background: var(--g); 
+                display: flex; 
+                flex-direction: column; /* Элементтерді тігінен тізеді */
+                align-items: center; 
+                min-height: 100vh; 
+                margin: 0; 
+                user-select: none; 
+                padding: 20px; /* Астында орын болуы үшін */
+            }
         .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 800px; text-align: center; border-top: 6px solid var(--p); position: relative; }
         .hidden { display: none !important; }
         input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #dfe6e9; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
@@ -56,20 +66,19 @@
         .modal-card { background: white; padding: 30px; border-radius: 15px; width: 350px; text-align: center; }
 
         /* Бұл стиль авторлық блокты экранның астына ортаға жинайды */
-        .final-footer {
-            display: block !important;
-            text-align: center !important;
-            width: 100% !important;
-            clear: both !important;
-            padding: 40px 0;
-            margin-top: 20px;
+        .author-container {
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 40px;
+            padding-bottom: 40px;
         }
         
         .auth-label {
             font-size: 11px;
             color: #95a5a6;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
             margin-bottom: 5px;
         }
         
@@ -86,18 +95,13 @@
             align-items: center;
             background: #0088cc;
             color: white;
-            padding: 8px 20px;
+            padding: 8px 22px;
             border-radius: 50px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0,136,204,0.3);
+            box-shadow: 0 4px 15px rgba(0,136,204,0.2);
         }
-
-.tg-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,136,204,0.4);
-}
         
     </style>
 </head>
@@ -174,26 +178,18 @@
     </div>
 </div>
 
-<footer style="text-align: center; padding: 20px 0; margin-top: 30px; font-family: sans-serif;">
-    <div style="display: inline-block;">
-        <div id="t-author" style="font-size: 12px; color: #95a5a6; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px;">
-            Авторлық жоба
-        </div>
-        
-        <div style="font-size: 18px; color: #2c3e50; font-weight: 800; margin-bottom: 12px;">
-            &copy; iznurlan@mail.ru
-        </div>
-
-        <a href="https://t.me/iznurlan" target="_blank" 
-           style="text-decoration: none; display: inline-flex; align-items: center; background: #0088cc; color: white; padding: 7px 18px; border-radius: 50px; font-size: 12px; font-weight: 600; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,136,204,0.2);">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-                <path d="M22 2L11 13"></path>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-            TELEGRAM
-        </a>
-    </div>
-</footer>
+<div class="author-container">
+    <div id="t-author" class="auth-label">Авторлық жоба</div>
+    <div class="auth-name">&copy; ИЗИМБЕТОВ НУРЛАН</div>
+    
+    <a href="https://t.me/iznurlan" target="_blank" class="tg-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+            <path d="M22 2L11 13"></path>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        TELEGRAM
+    </a>
+</div>    
     
 <script>
 // Сұрақтар базасы (өзгеріссіз қалды)
