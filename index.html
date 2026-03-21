@@ -274,6 +274,23 @@ function updateUI() {
     document.getElementById('pen-txt').innerText = t.pen_label;
 }
 
+// Толық экранды қосу
+function enterFull() {
+    let elem = document.documentElement;
+    if (elem.requestFullscreen) elem.requestFullscreen();
+    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+}
+
+// Толық экраннан шығу
+function exitFull() {
+    if (document.fullscreenElement) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.msExitFullscreen) document.msExitFullscreen();
+    }
+}
+    
 function setLanguage(lang) {
     L = lang; updateUI();
     document.getElementById('btn-kz').style.background = (lang === 'kz') ? '#2980b9' : '#34495e';
@@ -366,6 +383,8 @@ function checkPass() {
 function start(resume = false) {
     let f=document.getElementById('fn').value.trim(), l=document.getElementById('ln').value.trim();
     if(!f || !l) return alert(L==='kz'?"Аты-жөніңізді жазыңыз!":"Введите ФИО!");
+
+    enterFull(); // ТОЛЫҚ ЭКРАНҒА КІРУ
     
     document.getElementById('user-info-display').innerText = l + " " + f;
     
@@ -419,7 +438,16 @@ function render() {
     saveProgress(); // Сұрақ ауысқан сайын сақтаймыз
 }
 
-function move(n) { if(!isFinished) { cur+=n; render(); } }
+function move(n) { 
+    if(!isFinished) { 
+        // Егер оқушы экраннан шығып кетсе, "Келесі/Артқа" басқанда қайта кіргізу
+        if (!document.fullscreenElement) {
+            enterFull();
+        }
+        cur+=n; 
+        render(); 
+    } 
+}
 function openModal() { document.getElementById('modal').classList.remove('hidden'); }
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
@@ -470,6 +498,8 @@ function finish() {
     localStorage.removeItem('quiz_progress');
     localStorage.setItem('quiz_result', JSON.stringify(res));
 
+    exitFull(); // ТОЛЫҚ ЭКРАННАН ШЫҒУ
+    
     closeModal();
     showResult(res);
 
@@ -551,6 +581,23 @@ document.onkeydown = function(e) {
         return false;
     }
 };    
+
+document.addEventListener('fullscreenchange', () => {
+    // Егер тест басталған болса, бірақ әлі аяқталмаса ЖӘНЕ толық экраннан шықса:
+    if (!document.fullscreenElement && isStarted && !isFinished) {
+        viol++; // Бұзушылық саны артады
+        document.getElementById('v-c').innerText = viol;
+        
+        let msg = L === 'kz' 
+            ? "⚠️ ЕСКЕРТУ: Толық экран режимінен шықпаңыз! Бұл ереже бұзу болып саналады." 
+            : "⚠️ ПРЕДУПРЕЖДЕНИЕ: Не выходите из полноэкранного режима! Это считается нарушением.";
+        
+        alert(msg);
+        
+        // Оқушы Alert-ті жапқаннан кейін, кез келген батырманы (Келесі/Артқа) 
+        // басқанда экран автоматты түрде қайта ұлғаяды.
+    }
+});
     
 </script>
 </body>
