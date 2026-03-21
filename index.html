@@ -54,6 +54,51 @@
         .res-txt { font-size: 14px; color: #636e72; font-weight: 600; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .modal-card { background: white; padding: 30px; border-radius: 15px; width: 350px; text-align: center; }
+
+        /* Бұл стиль авторлық блокты экранның астына ортаға жинайды */
+        .final-footer {
+            display: block !important;
+            text-align: center !important;
+            width: 100% !important;
+            clear: both !important;
+            padding: 40px 0;
+            margin-top: 20px;
+        }
+        
+        .auth-label {
+            font-size: 11px;
+            color: #95a5a6;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        
+        .auth-name {
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+        
+        .tg-link {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            background: #0088cc;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,136,204,0.3);
+        }
+
+.tg-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,136,204,0.4);
+}
+        
     </style>
 </head>
 <body oncontextmenu="return false;">
