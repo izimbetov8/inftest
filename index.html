@@ -287,7 +287,9 @@ function openInst() {
 
 function closeInst() {
     document.getElementById('modal-inst').classList.add('hidden');
-    document.getElementById('btn-start').style.display = "block";
+    // Бұл жерден батырманы көрсетуді алып тастадық, 
+    // себебі оны тек checkPass() көрсетуі тиіс.
+    checkPass(); 
 }
 
 // ПАРАҚШАНЫ ЖАҢАРТҚАНДА ДЕРЕКТЕРДІ САҚТАУ
@@ -349,15 +351,14 @@ function loadProgress() {
 }
 
 function checkPass() {
-    const correctPass = "2026"; // ОСЫ ЖЕРГЕ ӨЗ ПАРОЛІҢІЗДІ ЖАЗЫҢЫЗ
-    const inputPass = document.getElementById('pass-input').value;
+    const correctPass = "2026"; 
+    const inputPass = document.getElementById('pass-input').value.trim();
     const btnStart = document.getElementById('btn-start');
 
+    // Тек 2026 жазылса ғана батырма пайда болады
     if (inputPass === correctPass) {
-        // Пароль дұрыс болса, батырманы көрсетеміз
         btnStart.style.display = "block";
     } else {
-        // Пароль қате болса, батырманы қайта жасырамыз
         btnStart.style.display = "none";
     }
 }
