@@ -136,6 +136,28 @@
             height: 10px;
             margin-right: 4px; 
         }
+
+    .input-group {
+        width: 100%;
+        margin: 0;
+    }
+
+    #school-name {
+        width: 100%;
+        padding: 14px;
+        margin: 12px 0;
+        border: 2px solid #dfe6e9;
+        border-radius: 10px;
+        font-size: 16px;
+        box-sizing: border-box;
+        outline: none;
+        transition: 0.3s;
+    }
+    
+    #school-name:focus {
+        border-color: #2980b9;
+        box-shadow: 0 0 8px rgba(41, 128, 185, 0.2);
+    }
         
     </style>
 </head>
@@ -152,6 +174,10 @@
     <input type="text" id="ln" placeholder="Тегі / Фамилия">
     <input type="text" id="fn" placeholder="Аты / Имя">
 
+    <div class="input-group">
+        <input type="text" id="school-name" placeholder="Мектеп атауы / Название школы">
+    </div>
+        
     <input type="password" id="pass-input" placeholder="Құпиясөз / Пароль" oninput="checkPass()" style="border: 2px solid #f39c12;">
 
     <button type="button" onclick="openInst()" id="btn-inst-main" style="background: #f39c12; margin-bottom: 10px; width: 100%;">Нұсқаулық / Инструкция</button>
@@ -479,12 +505,15 @@ function checkPass() {
 }
     
 function start(resume = false) {
-    let f=document.getElementById('fn').value.trim(), l=document.getElementById('ln').value.trim();
-    if(!f || !l) return alert(L==='kz'?"Аты-жөніңізді жазыңыз!":"Введите ФИО!");
+    let f = document.getElementById('fn').value.trim();
+    let l = document.getElementById('ln').value.trim();
+    let s = document.getElementById('school-name').value.trim(); // Мектепті алу
 
-    enterFull(); // ТОЛЫҚ ЭКРАНҒА КІРУ
-    
-    document.getElementById('user-info-display').innerText = l + " " + f;
+    if(!f || !l || !s) return alert(L==='kz'?"Барлық өрісті толтырыңыз!":"Заполните все поля!");
+
+    enterFull();
+    // Аты мен мектебін біріктіріп көрсету
+    document.getElementById('user-info-display').innerText = l + " " + f + " (" + s + ")";
     
     if(!resume) {
         qs = [...db[L]].sort(()=>0.5-Math.random()).slice(0, 20);
