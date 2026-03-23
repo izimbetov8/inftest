@@ -619,7 +619,7 @@ function finish() {
     let p = (viol >= 3) ? (viol - 2) : 0;
     let s = document.getElementById('school-name').value; // Мектепті алу
     const res = { 
-        L, 
+        lang: (L === 'kz' ? "Қазақша" : "Русский"), // 'kz' орнына толық атауын жіберу 
         ln: document.getElementById('ln').value, 
         fn: document.getElementById('fn').value, 
         school: s, // ОСЫ ЖЕРГЕ ҚОСЫЛДЫ
