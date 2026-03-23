@@ -158,6 +158,11 @@
         border-color: #2980b9;
         box-shadow: 0 0 8px rgba(41, 128, 185, 0.2);
     }
+
+    #r-n {
+        margin-bottom: 20px;
+        line-height: 1.4;
+    }
         
     </style>
 </head>
@@ -646,7 +651,12 @@ function showResult(d) {
     document.getElementById('s-res').classList.remove('hidden');
     // Аты-жөні (Үлкен)
     // Мектеп атауы (Кішірек, астында)
-    document.getElementById('r-n').innerHTML = `${d.ln} ${d.fn}<br><span style="font-size: 16px; color: #7f8c8d; font-weight: normal;">${d.school || ""}</span>`;
+    document.getElementById('r-n').innerHTML = `
+        <div style="font-size: 24px; margin-bottom: 5px;">${d.ln} ${d.fn}</div>
+        <div style="font-size: 16px; color: #7f8c8d; font-weight: normal; text-transform: none;">
+            ${d.school}
+        </div>
+    `;
     document.getElementById('r-score-big').innerText = d.score;
     document.getElementById('r-p').innerText = Math.round((d.score/20)*100) + "%";
     document.getElementById('r-raw').innerText = d.raw;
