@@ -590,7 +590,7 @@ function finish() {
             ? `Барлық сұраққа жауап беріңіз! (Орындалғаны: ${answeredCount}/20)` 
             : `Ответьте на все вопросы! (Выполнено: ${answeredCount}/20)`;
         
-        isPaused = true; // Мұны қосу "бұзушылық" болып есептелуінен қорғайды
+        isPaused = true; 
         alert(msg);
         closeModal();
         setTimeout(() => { isPaused = false; }, 800);
@@ -599,10 +599,8 @@ function finish() {
 
     const modalBtn = document.getElementById('m-btn');
     const finishBtn = document.getElementById('f-btn');
-    
     if (modalBtn.disabled) return;
     
-    // 2. Батырмаларды блоктау
     modalBtn.disabled = true;
     modalBtn.innerText = ui[L].fin_done || "АЯҚТАЛДЫ";
     if(finishBtn) {
@@ -614,30 +612,35 @@ function finish() {
     isStarted = false; 
     clearInterval(timer); 
 
-    // 3. Нәтижені есептеу
-    let r = 0; ans.forEach((a, i) => { if (a === qs[i].c) r++; }); 
+    // Нәтижені есептеу
+    let r = 0; ans.forEach((a, i) => { if (qs[i] && a === qs[i].c) r++; }); 
     let p = (viol >= 3) ? (viol - 2) : 0;
-    let s = document.getElementById('school-name').value; // Мектепті алу
+    
+    // Мектеп атауын алу
+    const schoolInput = document.getElementById('school-name');
+    let s = schoolInput ? schoolInput.value : "Көрсетілмеген";
+
     const res = { 
-        lang: (L === 'kz' ? "Қазақша" : "Русский"), // 'kz' орнына толық атауын жіберу 
+        lang: (L === 'kz' ? "Қазақша" : "Русский"), // Google кесте үшін
         ln: document.getElementById('ln').value, 
         fn: document.getElementById('fn').value, 
-        school: s, // ОСЫ ЖЕРГЕ ҚОСЫЛДЫ
+        school: s,
         raw: r, 
-        viol, 
+        viol: viol, 
         pen: p, 
-        score: Math.max(0, r-p) 
-};
+        score: Math.max(0, r-p),
+        L: L // showResult функциясы тілді тануы үшін керек
+    };
     
     localStorage.removeItem('quiz_progress');
     localStorage.setItem('quiz_result', JSON.stringify(res));
 
-    exitFull(); // ТОЛЫҚ ЭКРАННАН ШЫҒУ
-    
+    exitFull(); 
     closeModal();
-    showResult(res);
+    showResult(res); // Экранға нәтижені шығару
 
-    fetch('https://script.google.com/macros/s/AKfycbz4FwOCX5xACFr5gzH0J3dCNCz6gSxX5EoUeYDp1GY6C3cFmRXftlwGbVo-yV2x-w/exec', {
+    // Google Sheets-ке жіберу
+    fetch('https://script.google.com/macros/s/AKfycbwrsUEsPsuN7rZcVYnFLpcRoi03WGpNvIH1cS3QR-ayDouSpzA5VUsOvv1GT8HAq9oY/exec', {
         method: 'POST', 
         mode: 'no-cors', 
         body: JSON.stringify(res)
@@ -645,18 +648,20 @@ function finish() {
 }
 
 function showResult(d) {
-    L = d.L; updateUI();
+    if (d.L) L = d.L; 
+    updateUI();
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.add('hidden');
     document.getElementById('s-res').classList.remove('hidden');
-    // Аты-жөні (Үлкен)
-    // Мектеп атауы (Кішірек, астында)
+
+    // Аты-жөні мен мектепті шығару
     document.getElementById('r-n').innerHTML = `
         <div style="font-size: 24px; margin-bottom: 5px;">${d.ln} ${d.fn}</div>
         <div style="font-size: 16px; color: #7f8c8d; font-weight: normal; text-transform: none;">
-            ${d.school}
+            ${d.school || ""}
         </div>
     `;
+    
     document.getElementById('r-score-big').innerText = d.score;
     document.getElementById('r-p').innerText = Math.round((d.score/20)*100) + "%";
     document.getElementById('r-raw').innerText = d.raw;
