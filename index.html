@@ -163,6 +163,33 @@
         margin-bottom: 20px;
         line-height: 1.4;
     }
+
+    /* Қатемен жұмыс батырмасы */
+        .btn-errors {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .btn-errors:hover { background-color: #c0392b; }
+        
+        /* Қателер блогы */
+        .error-item {
+            text-align: left;
+            background: #f9f9f9;
+            border-left: 5px solid #e74c3c;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .user-ans { color: #e74c3c; font-weight: bold; } /* Пайдаланушының қате жауабы */
+        .correct-ans { color: #27ae60; font-weight: bold; } /* Дұрыс жауап */
+        .hidden { display: none; }
         
     </style>
 </head>
@@ -319,7 +346,6 @@ const db = {
 {q:"Жергілікті желідегі компьютерлерді біріктіретін құрылғы (Switch) қалай аталады?", a:["Маршрутизатор","Коммутатор","Модем","Концентратор"], c:1},
         // Программалау
 {q:"Берілген кодтың нәтижесін анықтаңыз:\nprint(3 * '2')", a:["6","222","'222'","Қате"], c:2},
-{q:"Python-да 'try-except' блогы не үшін қолданылады?", a:["Цикл құру үшін","Қателерді өңдеу үшін","Функцияны жариялау үшін","Мәліметтерді салыстыру үшін"], c:1},
 {q:"Төмендегі кодтың нәтижесі қандай?\nx = [1, 2, 3]\nprint(x.pop(0))", a:["1","2","3","[2, 3]"], c:0},
 {q:"Python-да кездейсоқ сандармен жұмыс істеу модулі:", a:["math","random","time","os"], c:1},
 {q:"Берілген код не шығарады?\nprint(10 > 5 and 3 < 1)", a:["True","False","1","None"], c:1},
@@ -431,7 +457,6 @@ const db = {
 {q:"Как называется устройство (Switch) для объединения компьютеров в локальную сеть?", a:["Маршрутизатор","Коммутатор","Модем","Концентратор"], c:1},
     // Программирование
 {q:"Определите результат данного кода:\nprint(3 * '2')", a:["6","222","'222'","Ошибка"], c:2},
-{q:"Для чего используется блок 'try-except' в Python?", a:["Для создания цикла","Для обработки ошибок","Для объявления функции","Для сравнения данных"], c:1},
 {q:"Какой результат будет у следующего кода?\nx = [1, 2, 3]\nprint(x.pop(0))", a:["1","2","3","[2, 3]"], c:0},
 {q:"Модуль для работы со случайными числами в Python:", a:["math","random","time","os"], c:1},
 {q:"Что выведет данный код?\nprint(10 > 5 and 3 < 1)", a:["True","False","1","None"], c:1},
@@ -815,6 +840,50 @@ function showResult(d) {
     document.getElementById('r-raw').innerText = d.raw;
     document.getElementById('r-viol').innerText = d.viol;
     document.getElementById('r-pen').innerText = d.pen;
+
+    // Қателерді талдау блогын дайындау
+        let errorHtml = '<div id="error-review" class="hidden" style="margin-top:20px; border-top:2px dashed #ddd; padding-top:20px;">';
+        let hasErrors = false;
+    
+        ans.forEach((userAnswerIndex, i) => {
+            if (qs[i] && userAnswerIndex !== qs[i].c) {
+                hasErrors = true;
+                errorHtml += `
+                    <div class="error-item">
+                        <b>${i + 1}. ${qs[i].q}</b><br>
+                        <span class="user-ans">${L === 'kz' ? 'Сіздің жауабыңыз' : 'Ваш ответ'}: ${qs[i].a[userAnswerIndex] || '---'}</span><br>
+                        <span class="correct-ans">${L === 'kz' ? 'Дұрыс жауап' : 'Правильный ответ'}: ${qs[i].a[qs[i].c]}</span>
+                    </div>`;
+            }
+        });
+        errorHtml += '</div>';
+    
+        // Батырманы қосу (нәтижелердің астына)
+        const btnText = L === 'kz' ? 'Қатемен жұмыс' : 'Работа с ошибками';
+        const reviewBtn = `<button id="show-errors-btn" class="btn-errors" onclick="toggleErrors()">${btnText}</button>`;
+        
+        // Егер қате болса ғана батырманы қосамыз
+        const container = document.getElementById('s-res');
+        if (hasErrors && !document.getElementById('show-errors-btn')) {
+            const resultHeader = container.querySelector('h2'); // "Тест аяқталды" деген сөз
+            resultHeader.insertAdjacentHTML('afterend', reviewBtn);
+            container.insertAdjacentHTML('beforeend', errorHtml);
+        }
+    }
+    
+    // Қателер тізімін көрсету/жасыру функциясы
+    function toggleErrors() {
+        const reviewDiv = document.getElementById('error-review');
+        const btn = document.getElementById('show-errors-btn');
+        if (reviewDiv.classList.contains('hidden')) {
+            reviewDiv.classList.remove('hidden');
+            btn.innerText = L === 'kz' ? 'Жасыру' : 'Скрыть';
+        } else {
+            reviewDiv.classList.add('hidden');
+            btn.innerText = L === 'kz' ? 'Қатемен жұмыс' : 'Работа с ошибками';
+        }
+    }
+        
 }
 
 window.onblur = function() {
