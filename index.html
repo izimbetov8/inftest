@@ -820,70 +820,91 @@ function finish() {
     }).catch(err => console.log("Дерек жіберу қатесі:", err));
 }
 
+// 1. Нәтиже көрсету функциясы (Жаңартылған)
 function showResult(d) {
     if (d.L) L = d.L;
     updateUI();
+    
+    // Блоктарды ауыстыру
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.add('hidden');
     const resSec = document.getElementById('s-res');
     resSec.classList.remove('hidden');
 
-    // Жоғарғы бөлім: Аты-жөні мен мектеп
+    // Экранның ең жоғарғы жағына Аты-жөні мен Мектепті шығару
     document.getElementById('r-n').innerHTML = `
-        <div style="font-size: 24px; margin-bottom: 5px;">${d.ln} ${d.fn}</div>
-        <div style="font-size: 16px; color: #7f8c8d; font-weight: normal;">${d.school || ""}</div>
+        <div style="font-size: 26px; color: #2d3436; margin-bottom: 5px; font-weight: 800;">
+            ${d.ln} ${d.fn}
+        </div>
+        <div style="font-size: 18px; color: #636e72; font-weight: 400; margin-bottom: 20px;">
+            ${d.school || ""}
+        </div>
     `;
 
-    // Нәтижелерді толтыру
+    // Негізгі сандарды толтыру
     document.getElementById('r-score-big').innerText = d.score;
     document.getElementById('r-p').innerText = Math.round((d.score / 20) * 100) + "%";
     document.getElementById('r-raw').innerText = d.raw;
     document.getElementById('r-viol').innerText = d.viol;
     document.getElementById('r-pen').innerText = d.pen;
 
-    // Қателерді талдау блогын дайындау
-        let errorHtml = '<div id="error-review" class="hidden" style="margin-top:20px; border-top:2px dashed #ddd; padding-top:20px;">';
-        let hasErrors = false;
-    
-        ans.forEach((userAnswerIndex, i) => {
-            if (qs[i] && userAnswerIndex !== qs[i].c) {
-                hasErrors = true;
-                errorHtml += `
-                    <div class="error-item">
-                        <b>${i + 1}. ${qs[i].q}</b><br>
-                        <span class="user-ans">${L === 'kz' ? 'Сіздің жауабыңыз' : 'Ваш ответ'}: ${qs[i].a[userAnswerIndex] || '---'}</span><br>
-                        <span class="correct-ans">${L === 'kz' ? 'Дұрыс жауап' : 'Правильный ответ'}: ${qs[i].a[qs[i].c]}</span>
-                    </div>`;
-            }
-        });
-        errorHtml += '</div>';
-    
-        // Батырманы қосу (нәтижелердің астына)
+    // Қателерді есептеу және тізімін жасау
+    let errorHtml = `<div id="error-review" class="hidden" style="margin-top:25px; border-top:2px dashed #ccc; padding-top:20px;">`;
+    let hasErrors = false;
+
+    // ans - бұл пайдаланушы таңдаған индекстер массиві
+    // qs - бұл тест сұрақтарының массиві
+    ans.forEach((userAnswerIndex, i) => {
+        if (qs[i] && userAnswerIndex !== qs[i].c) {
+            hasErrors = true;
+            errorHtml += `
+                <div class="error-item">
+                    <div style="margin-bottom: 8px; font-weight: bold; color: #2d3436;">${i + 1}. ${qs[i].q}</div>
+                    <div class="user-ans">${L === 'kz' ? 'Сіздің жауабыңыз' : 'Ваш ответ'}: ${userAnswerIndex !== null ? qs[i].a[userAnswerIndex] : '---'}</div>
+                    <div class="correct-ans">${L === 'kz' ? 'Дұрыс жауап' : 'Правильный ответ'}: ${qs[i].a[qs[i].c]}</div>
+                </div>`;
+        }
+    });
+    errorHtml += `</div>`;
+
+    // Егер қате болса, батырманы қосамыз
+    if (hasErrors) {
         const btnText = L === 'kz' ? 'Қатемен жұмыс' : 'Работа с ошибками';
-        const reviewBtn = `<button id="show-errors-btn" class="btn-errors" onclick="toggleErrors()">${btnText}</button>`;
+        const reviewBtnHtml = `
+            <div style="text-align:center; margin: 15px 0;">
+                <button id="show-errors-btn" class="btn-errors" onclick="toggleErrors()">
+                    ${btnText}
+                </button>
+            </div>`;
         
-        // Егер қате болса ғана батырманы қосамыз
-        const container = document.getElementById('s-res');
-        if (hasErrors && !document.getElementById('show-errors-btn')) {
-            const resultHeader = container.querySelector('h2'); // "Тест аяқталды" деген сөз
-            resultHeader.insertAdjacentHTML('afterend', reviewBtn);
-            container.insertAdjacentHTML('beforeend', errorHtml);
-        }
+        // Батырманы нәтиже картасынан кейін қосамыз
+        const resCard = resSec.querySelector('.res-card');
+        
+        // Ескі батырма болса өшіріп, жаңасын қосамыз (қайталанбауы үшін)
+        const oldBtn = document.getElementById('show-errors-btn');
+        if (oldBtn) oldBtn.remove();
+        const oldReview = document.getElementById('error-review');
+        if (oldReview) oldReview.remove();
+
+        resCard.insertAdjacentHTML('afterend', reviewBtnHtml);
+        resSec.insertAdjacentHTML('beforeend', errorHtml);
     }
+}
+
+// 2. Қателерді көрсету/жасыру ауыстырғышы
+function toggleErrors() {
+    const reviewDiv = document.getElementById('error-review');
+    const btn = document.getElementById('show-errors-btn');
     
-    // Қателер тізімін көрсету/жасыру функциясы
-    function toggleErrors() {
-        const reviewDiv = document.getElementById('error-review');
-        const btn = document.getElementById('show-errors-btn');
-        if (reviewDiv.classList.contains('hidden')) {
-            reviewDiv.classList.remove('hidden');
-            btn.innerText = L === 'kz' ? 'Жасыру' : 'Скрыть';
-        } else {
-            reviewDiv.classList.add('hidden');
-            btn.innerText = L === 'kz' ? 'Қатемен жұмыс' : 'Работа с ошибками';
-        }
+    if (reviewDiv.classList.contains('hidden')) {
+        reviewDiv.classList.remove('hidden');
+        btn.innerText = L === 'kz' ? 'Жасыру' : 'Скрыть';
+        // Тізімге автоматты түрде жылжу
+        reviewDiv.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        reviewDiv.classList.add('hidden');
+        btn.innerText = L === 'kz' ? 'Қатемен жұмыс' : 'Работа с ошибками';
     }
-        
 }
 
 window.onblur = function() {
