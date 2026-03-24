@@ -821,22 +821,22 @@ function finish() {
 }
 
 function showResult(d) {
-    if (d.L) L = d.L; 
+    if (d.L) L = d.L;
     updateUI();
     document.getElementById('s-start').classList.add('hidden');
     document.getElementById('s-test').classList.add('hidden');
-    document.getElementById('s-res').classList.remove('hidden');
+    const resSec = document.getElementById('s-res');
+    resSec.classList.remove('hidden');
 
-    // Аты-жөні мен мектепті шығару
+    // Жоғарғы бөлім: Аты-жөні мен мектеп
     document.getElementById('r-n').innerHTML = `
         <div style="font-size: 24px; margin-bottom: 5px;">${d.ln} ${d.fn}</div>
-        <div style="font-size: 16px; color: #7f8c8d; font-weight: normal; text-transform: none;">
-            ${d.school || ""}
-        </div>
+        <div style="font-size: 16px; color: #7f8c8d; font-weight: normal;">${d.school || ""}</div>
     `;
-    
+
+    // Нәтижелерді толтыру
     document.getElementById('r-score-big').innerText = d.score;
-    document.getElementById('r-p').innerText = Math.round((d.score/20)*100) + "%";
+    document.getElementById('r-p').innerText = Math.round((d.score / 20) * 100) + "%";
     document.getElementById('r-raw').innerText = d.raw;
     document.getElementById('r-viol').innerText = d.viol;
     document.getElementById('r-pen').innerText = d.pen;
