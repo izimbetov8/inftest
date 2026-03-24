@@ -331,8 +331,11 @@ const db = {
 
 // HTML
 {q:"HTML-де нөмірленген (1, 2, 3...) тізім жасау тегі:", a:["<ul>","<ol>","<li>","<list>"], c:1},
-{q:"Кестенің тақырыптық ұяшығын (қалың (жирный) қаріппен) анықтайтын тег:", a:["<td>","<tr>","<th>","<thead>"], c:2},
 {q:"Сыртқы стильдер файлын (CSS) қосу тегі:", a:["<style>","<link>","<script>","<css>"], c:1},
+{q:"HTML-де гиперсілтеме (басқа бетке өту) жасау үшін қай тег қолданылады?", a:["<link>","<a>","<href>","<url>"], c:1},
+{q:"Веб-бетке сурет қою үшін қолданылатын дұрыс тег пен атрибутты көрсетіңіз:", a:["<img href='...'>","<image src='...'>","<img src='...'>","<pic src='...'>"], c:2},
+{q:"HTML-дегі ең үлкен деңгейлі тақырып (заголовок) тегін анықтаңыз:", a:["<h6>","<header>","<h1>","<head>"], c:2},
+{q:"Мәтінді келесі жолға көшіру (перенос строки) үшін қай тег қолданылады?", a:["<lb>","<p>","<break>","<br>"], c:3},
 
 // Логика
 {q:"Логикалық терістеу (инверсия) амалы қайсысы?", a:["AND","OR","NOT","XOR"], c:2},
@@ -383,7 +386,6 @@ const db = {
 {q:"Екілік жүйедегі 1000₂ саны ондық жүйеде нешеге тең?", a:["2","4","8","16"], c:2},
 
 // HTML және Web
-{q:"HTML-де түсініктеме (комментарий) қалай жазылады?", a:["//","/* */","<!-- -->","#"], c:2},
 {q:"Веб-беттегі мәтіннің түсін өзгертетін CSS қасиеті:", a:["text-color","font-style","color","background"], c:2},
 {q:"HTML-де ашылмалы тізім (dropdown) жасау тегі:", a:["<list>","<select>","<input>","<check>"], c:1},
 
@@ -442,8 +444,11 @@ const db = {
 
 // HTML
 {q:"Тег для создания нумерованного (1, 2, 3...) списка в HTML:", a:["<ul>","<ol>","<li>","<list>"], c:1},
-{q:"Какой тег определяет заголовочную ячейку таблицы (жирным шрифтом)?", a:["<td>","<tr>","<th>","<thead>"], c:2},
 {q:"Тег для подключения внешнего файла стилей (CSS):", a:["<style>","<link>","<script>","<css>"], c:1},
+{q:"Какой тег используется в HTML для создания гиперссылки (перехода на другую страницу)?", a:["<link>","<a>","<href>","<url>"], c:1},
+{q:"Укажите правильный тег и атрибут для вставки изображения на веб-страницу:", a:["<img href='...'>","<image src='...'>","<img src='...'>","<pic src='...'>"], c:2},
+{q:"Определите тег заголовка самого высокого (крупного) уровня в HTML:", a:["<h6>","<header>","<h1>","<head>"], c:2},
+{q:"Какой тег используется для переноса текста на новую строку?", a:["<lb>","<p>","<break>","<br>"], c:3},
 
 // Логика
 {q:"Какая операция является логическим отрицанием (инверсией)?", a:["AND","OR","NOT","XOR"], c:2},
@@ -494,7 +499,6 @@ const db = {
 {q:"Чему равно двоичное число 1000₂ в десятичной системе?", a:["2","4","8","16"], c:2},
 
 // HTML и Web
-{q:"Как пишутся комментарии в HTML?", a:["//","/* */","<!-- -->","#"], c:2},
 {q:"Свойство CSS для изменения цвета текста на веб-странице:", a:["text-color","font-style","color","background"], c:2},
 {q:"Тег для создания выпадающего списка (dropdown) в HTML:", a:["<list>","<select>","<input>","<check>"], c:1},
 
@@ -554,6 +558,15 @@ const ui = {
 
 let qs=[], cur=0, ans=[], timer, time=1800, viol=0, L='kz', isStarted=false, isFinished=false;
 let isPaused = false;
+
+const escapeHTML = (str) => {
+    if (!str) return "---";
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+};
 
 function updateUI() {
     const t = ui[L];
@@ -854,17 +867,23 @@ function showResult(d) {
 
     // ans - бұл пайдаланушы таңдаған индекстер массиві
     // qs - бұл тест сұрақтарының массиві
-    ans.forEach((userAnswerIndex, i) => {
-        if (qs[i] && userAnswerIndex !== qs[i].c) {
-            hasErrors = true;
-            errorHtml += `
-                <div class="error-item">
-                    <div style="margin-bottom: 8px; font-weight: bold; color: #2d3436;">${i + 1}. ${qs[i].q}</div>
-                    <div class="user-ans">${L === 'kz' ? 'Сіздің жауабыңыз' : 'Ваш ответ'}: ${userAnswerIndex !== null ? qs[i].a[userAnswerIndex] : '---'}</div>
-                    <div class="correct-ans">${L === 'kz' ? 'Дұрыс жауап' : 'Правильный ответ'}: ${qs[i].a[qs[i].c]}</div>
-                </div>`;
-        }
-    });
+    // showResult функциясының ішінде:
+ans.forEach((userAnswerIndex, i) => {
+    if (qs[i] && userAnswerIndex !== qs[i].c) {
+        hasErrors = true;
+        
+        // МІНЕ ОСЫ ЖЕРДЕ escapeHTML ҚОЛДАНЫЛАДЫ:
+        const userAnsSafe = escapeHTML(qs[i].a[userAnswerIndex]); 
+        const correctAnsSafe = escapeHTML(qs[i].a[qs[i].c]);
+
+        errorHtml += `
+            <div class="error-item">
+                <div style="margin-bottom: 5px; font-weight: bold;">${i + 1}. ${qs[i].q}</div>
+                <div class="user-ans">${L === 'kz' ? 'Сіздің жауабыңыз' : 'Ваш ответ'}: ${userAnsSafe}</div>
+                <div class="correct-ans">${L === 'kz' ? 'Дұрыс жауап' : 'Правильный ответ'}: ${correctAnsSafe}</div>
+            </div>`;
+    }
+});
     errorHtml += `</div>`;
 
     // Егер қате болса, батырманы қосамыз
